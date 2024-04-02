@@ -1,16 +1,19 @@
 # themes from https://github.com/alacritty/alacritty-theme
 
-# import = ["/Users/mischa/.config/alacritty/themes/themes/gruvbox_dark.toml"]
 import = ["~/.config/alacritty/themes/themes/gruvbox_dark.toml"]
+
+# shell.program = "/bin/bash"
 
 [font]
 size = 25
 
 [font.normal]
-family = "UbuntuMono Nerd Font"
+family = "0xProto Nerd Font"
+style = "Regular"
 
 [window]
 decorations = "none"
+startup_mode = "Maximized"
 
 [window.padding]
 x = 7

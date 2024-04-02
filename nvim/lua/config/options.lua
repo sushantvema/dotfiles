@@ -24,8 +24,8 @@ opt.foldenable = false
 
 -- scrolling
 opt.number = false
-opt.relativenumber = false
-opt.scrolloff = 8
+opt.relativenumber = true
+opt.scrolloff = 10
 opt.linebreak = true
 
 -- indentation
@@ -47,4 +47,9 @@ opt.linebreak = true
 --
 -- opt.vim_markdown_conceal = 0
 --
-vim.g.mkdp_browser = "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"
+vim.g.mkdp_browser = "/Applications/Safari.app"
+-- vim.g.mkdp_browser = "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"
+
+-- LSP Server to use for Python.
+-- Set to "basedpyright" to use basedpyright instead of pyright.
+vim.g.lazyvim_python_lsp = "basedpyright"
