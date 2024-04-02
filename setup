@@ -1,14 +1,13 @@
 #!/bin/bash
 
 # This is the setup script for my config. The idea is to be able to run
-# this after cloning the repo on a Mac or Ubuntu (WSL) system and be up
+# this after cloning the repo on a Mac or Linux system and be up
 # and running very quickly.
 tmux source .tmux.conf
 ln -sf "$PWD/nvim" "$XDG_CONFIG_HOME"/nvim
 # ln -sf "$PWD/skhdrc" "$XDG_CONFIG_HOME"/skhd/skhdrc
 # ln -sf "$PWD/newsboat/config" "$HOME"/.newsboat/config
 # ln -sf "$PWD/newsboat/urls" "$HOME"/.newsboat/urls
-# ln -sf "$PWD/wezterm.lua" /mnt/c/Users/PD2
 
 # set up blog
 # git clone git@github.com:mischavandenburg/hugo-PaperModX-theme.git themes/PaperModX --depth=1
@@ -35,14 +34,14 @@ brew install --cask alacritty
 # amethyst fzf nvim exa hugo bash-completion@2 newsboat kubectl starship
 
 # ubuntu packages apt
-sudo brew install ripgrep gh starship
+brew install ripgrep gh starship
 
 # ubuntu apt neovim setup
-sudo brew install gcc g++ unzip
+brew install gcc g++ unzip
 
 # ubuntu brew for vim and neovim setup
 # sudo apt install fd fzf kubectl kubectx derailed/k9s/k9s
-sudo brew install fd fzf
+brew install fd fzf
 
 # ubuntu brew for neovim setup
 brew install neovim go lazygit
