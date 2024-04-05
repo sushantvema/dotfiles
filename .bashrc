@@ -142,15 +142,8 @@ alias sv='cd $REPOS/github.com/sushantvema/'
 alias sand='cd $SAND'
 alias ..="cd .."
 alias scripts='cd $SCRIPTS'
-# alias cdblog="cd ~/websites/blog"
-# alias cdpblog='cd $SECOND_BRAIN/2-areas/blog/content'
-# alias lab='cd $LAB'
-# alias cks='cd $LAB/kubernetes/cks/'
-# alias alab='cd $GHREPOS/azure-lab'
 alias dot='cd $GHREPOS/dotfiles'
 alias repos='cd $REPOS'
-# alias cdgo='cd $GHREPOS/go/'
-# alias ex='cd $REPOS/github.com/mischavandenburg/go/Exercism/'
 alias rwdot='cd $REPOS/github.com/sushantvema/dotfiles'
 alias c="clear"
 alias icloud="cd \$ICLOUD"
@@ -166,7 +159,6 @@ alias last='find . -type f -not -path "*/\.*" -exec ls -lrt {} +'
 
 alias t='tmux'
 alias e='exit'
-# alias syu='sudo pacman -Syu'
 
 # git
 alias gp='git pull'
