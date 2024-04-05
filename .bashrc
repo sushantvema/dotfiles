@@ -125,6 +125,11 @@ eval "$(starship init bash)"
 alias att="tmux a -t"
 alias panedown="tmux resize-pane -D 15"
 alias paneup="tmux resize-pane -U 15"
+
+# ~~~~~~~~~~~~~~~ Taskwarrior aliases ~~~~~~~~~~~~~~~~~~~~~~~~~~
+alias tps="task project:sandmining"
+alias tpl="task project:LifeOS"
+
 # ~~~~~~~~~~~~~~~ Aliases ~~~~~~~~~~~~~~~~~~~~~~~~
 
 alias v=nvim
@@ -192,27 +197,12 @@ alias vbn='python ~/git/python/brainfile.py'
 # starting programmes
 alias cards='python3 /opt/homebrew/lib/python3.11/site-packages/mtg_proxy_printer/'
 
-# terraform
-# alias tf='terraform'
-# alias tp='terraform plan'
-
 # fun
 alias fishies=asciiquarium
 
 # useful scripts for zettelkasten
 alias day="bash \$SCRIPTS/day"
 alias zet="bash \$SCRIPTS/zet"
-
-# kubectl
-# alias k='kubectl'
-# source <(kubectl completion bash)
-# complete -o default -F __start_kubectl k
-# alias kgp='kubectl get pods'
-# alias kc='kubectx'
-# alias kn='kubens'
-
-# alias kcs='kubectl config use-context admin@homelab-staging'
-# alias kcp='kubectl config use-context admin@homelab-production'
 
 # fzf aliases
 # use fp to do a fzf search and preview the files
