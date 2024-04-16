@@ -1,9 +1,9 @@
 return {
   -- add symbols-outline
   {
-    -- "ixru/nvim-markdown",
-    -- cmd = "",
-    -- keys = { { "<leader>nn", "<cmd>NoNeckPain<cr>", desc = "[N]o [N]eckpain" } },
+    "ixru/nvim-markdown",
+    cmd = "",
+    keys = { { "<leader>nn", "<cmd>NoNeckPain<cr>", desc = "[N]o [N]eckpain" } },
   },
 
   {
@@ -13,5 +13,10 @@ return {
     build = function()
       vim.fn["mkdp#util#install"]()
     end,
+  },
+  {
+    "lukas-reineke/headlines.nvim",
+    dependencies = "nvim-treesitter/nvim-treesitter",
+    opts = {},
   },
 }
