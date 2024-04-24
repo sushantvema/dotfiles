@@ -26,6 +26,9 @@ return {
   {
     "nvim-telescope/telescope-symbols.nvim",
   },
+  {
+    "crispgm/telescope-heading.nvim",
+  },
 
   -- Custom ripgrep configuration:
 

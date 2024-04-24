@@ -125,6 +125,12 @@ eval "$(starship init bash)"
 alias att="tmux a -t"
 alias panedown="tmux resize-pane -D 15"
 alias paneup="tmux resize-pane -U 15"
+# Move a newly-created window to a certain index.
+ins-move() {
+	for ((i = $1; i < $2 - 1; i++)); do
+		tmux swap-window -s :$i -t :$((i + 1))
+	done
+}
 
 # ~~~~~~~~~~~~~~~ Taskwarrior aliases ~~~~~~~~~~~~~~~~~~~~~~~~~~
 alias tps="task project:sandmining"
