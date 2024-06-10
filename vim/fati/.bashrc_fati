@@ -4,6 +4,8 @@ export PATH=~/bin:${PATH}
 # Set to superior editing mode
 set -o vi
 
+unset SSH_ASKPASS
+
 # keybinds
 bind -x '"\C-l":clear'
 # ~~~~~~~~~~~~~~~ Environment Variables ~~~~~~~~~~~~~~~~~~~~~~~~
