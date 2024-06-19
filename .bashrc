@@ -1,6 +1,6 @@
 #
 # ~/.bashrc
-
+eval $(/opt/homebrew/bin/brew shellenv)
 # Set to superior editing mode
 set -o vi
 

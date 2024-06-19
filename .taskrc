@@ -1,0 +1,9 @@
+data.location=~/.task
+
+include ~/.task/themes/solarized-dark-256.theme
+
+uda.taskwarrior-tui.selection.indicator=>>
+uda.taskwarrior-tui.selection.italic=yes
+uda.taskwarrior-tui.task-report.prompt-on-delete=true
+uda.taskwarrior-tui.task-report.prompt-on-done=true
+

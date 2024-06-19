@@ -211,17 +211,17 @@ alias vf='v $(fp)'
 # sourcing
 # source "$HOME/.privaterc"
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
-	source "$HOME/.fzf.bash"
-	# echo "I'm on Mac!"
-
-	# brew bash completion
-	[[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
-else
-	#	source /usr/share/fzf/key-bindings.bash
-	#	source /usr/share/fzf/completion.bash
-	[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-fi
+# if [[ "$OSTYPE" == "darwin"* ]]; then
+# 	source "$HOME/.fzf.bash"
+# 	# echo "I'm on Mac!"
+#
+# 	# brew bash completion
+# 	[[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
+# else
+# 	#	source /usr/share/fzf/key-bindings.bash
+# 	#	source /usr/share/fzf/completion.bash
+# 	[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# fi
 
 ### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
 # export PATH="/Users/mischa/.rd/bin:$PATH"
@@ -231,3 +231,7 @@ fi
 # export NVM_DIR="$HOME/.config/nvm"
 #[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
 #[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+
+eval "$(zoxide init bash)"
+
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
