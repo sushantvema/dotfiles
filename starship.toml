@@ -22,7 +22,7 @@ format = "[$path]($style)[$lock_symbol]($lock_style)"
 
 [git_branch]
 format = " [$symbol$branch]($style) "
-symbol = "🍣 "
+symbol = "󰘬 "
 style = "bold yellow"
 
 [git_commit]
@@ -45,6 +45,7 @@ renamed = "📛 ×${count} "
 deleted = "🗑️  ×${count} "
 style = "bright-white"
 format = "$all_status$ahead_behind"
+disabled = true
 
 [hostname]
 ssh_only = false
@@ -62,7 +63,7 @@ style = "bold green"
 format = "$symbol[${ram}( | ${swap})]($style) "
 threshold = 70
 style = "bold dimmed white"
-disabled = false
+disabled = true
 
 [package]
 disabled = true
@@ -79,7 +80,7 @@ style = "bold green"
 time_format = "%T"
 format = "🕙 $time($style) "
 style = "bright-white"
-disabled = false
+disabled = true
 
 [typst]
 format = "[$symbol($version)]($style)"
