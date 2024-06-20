@@ -1,8 +1,8 @@
 # themes from https://github.com/alacritty/alacritty-theme
 
-import = ["~/.config/alacritty/themes/themes/gruvbox_dark.toml"]
+import = ["~/.config/alacritty/themes/themes/slate.toml"]
 
-# shell.program = "/bin/bash"
+shell.program = "/bin/bash"
 
 [font]
 size = 25
