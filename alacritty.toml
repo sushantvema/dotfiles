@@ -11,7 +11,7 @@ family = "0xProto Nerd Font"
 style = "Regular"
 
 [window]
-decorations = "Transparent"
+decorations = "Buttonless"
 startup_mode = "Maximized"
 opacity = 0.75
 

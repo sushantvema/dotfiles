@@ -234,5 +234,7 @@ alias vf='v $(fp)'
 #[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 
 eval "$(zoxide init bash)"
+# Set up fzf key bindings and fuzzy completion
+eval "$(fzf --bash)"
 
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
