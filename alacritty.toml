@@ -4,7 +4,7 @@ import = ["~/.config/alacritty/themes/themes/slate.toml"]
 live_config_reload=true
 
 [font]
-size = 25
+size = 20
 
 [font.normal]
 family = "0xProto Nerd Font"
@@ -16,7 +16,7 @@ startup_mode = "Maximized"
 opacity = 0.75
 
 [window.padding]
-x = 7
+x = 3
 y = 0
 
 [cursor]
