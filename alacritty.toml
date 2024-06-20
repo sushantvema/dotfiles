@@ -1,8 +1,9 @@
 # themes from https://github.com/alacritty/alacritty-theme
 
+# GENERAL
+[general]
 import = ["~/.config/alacritty/themes/themes/slate.toml"]
-
-shell.program = "/bin/bash"
+live_config_reload=true
 
 [font]
 size = 25
@@ -12,9 +13,17 @@ family = "0xProto Nerd Font"
 style = "Regular"
 
 [window]
-decorations = "none"
+decorations = "Transparent"
 startup_mode = "Maximized"
+opacity = 0.5 
 
 [window.padding]
 x = 7
 y = 0
+
+[cursor]
+style = {"Underline", "Always"}
+
+[mouse]
+hide_when_typing = true
+
