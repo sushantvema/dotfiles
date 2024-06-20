@@ -1,7 +1,5 @@
 # themes from https://github.com/alacritty/alacritty-theme
 
-# GENERAL
-[general]
 import = ["~/.config/alacritty/themes/themes/slate.toml"]
 live_config_reload=true
 
@@ -15,14 +13,16 @@ style = "Regular"
 [window]
 decorations = "Transparent"
 startup_mode = "Maximized"
-opacity = 0.5 
+opacity = 0.75
 
 [window.padding]
 x = 7
 y = 0
 
 [cursor]
-style = {"Underline", "Always"}
+[cursor.style]
+shape = "Underline"
+blinking = "Always"
 
 [mouse]
 hide_when_typing = true

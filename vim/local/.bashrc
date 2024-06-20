@@ -175,6 +175,7 @@ alias lg='lazygit'
 alias ve='python -m venv ./venv'
 alias va='source ./venv/bin/activate'
 alias vir='pip install -r requirements.txt'
+alias dotsync='rsync -a dotfiles/ ~/.config/'
 
 # ricing
 alias et='v ~/.config/awesome/themes/powerarrow/theme-personal.lua'
