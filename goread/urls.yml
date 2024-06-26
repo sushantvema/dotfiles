@@ -1,0 +1,10 @@
+categories:
+  - name: Tech
+    desc: Tech news
+    subscriptions:
+      - name: Wired
+        desc: News from the wired team
+        url: https://www.wired.com/feed/rss
+      - name: TechCrunch
+        desc: General technology news
+        url: techcrunch.com/feed

@@ -19,7 +19,7 @@ export BROWSER="safari"
 export REPOS="$HOME/Repos"
 export GITUSER="sushantvema"
 export GHREPOS="$REPOS/github.com/$GITUSER"
-export DOTFILES="$GHREPOS/dotfiles"
+export DOTFILES="$HOME/dotfiles"
 export SCRIPTS="$DOTFILES/scripts"
 export ICLOUD="$HOME/icloud"
 export SECOND_BRAIN="$HOME/garden"
@@ -209,6 +209,15 @@ alias fp="fzf --preview 'bat --style=numbers --color=always --line-range :500 {}
 # search for a file with fzf and open it in vim
 alias vf='v $(fp)'
 
+# taskell aliases
+alias school="taskell $DOTFILES/school.md"
+alias work="taskell $DOTFILES/work.md"
+alias dev="taskell $DOTFILES/ide.md"
+alias personal="taskell $DOTFILES/personal.md"
+
+# goread alias to update config
+alias goread-update="cat dotfiles/goread/urls.yml > ~/Library/Application\ Support/goread/urls.yml"
+
 # sourcing
 # source "$HOME/.privaterc"
 
@@ -238,3 +247,5 @@ eval "$(zoxide init bash)"
 eval "$(fzf --bash)"
 
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
+
+export IS_BASH_INIT="TRUE"

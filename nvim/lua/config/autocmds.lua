@@ -6,19 +6,9 @@
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "gitcommit", "markdown" },
   callback = function()
-    require("cmp").setup({ enabled = false })
+    require("cmp").setup({ enabled = true })
   end,
 })
-
--- attemting to disable terraform ls on fixture file
--- vim.api.nvim_create_autocmd("BufEnter", {
---   pattern = "*fixture*",
---   callback = function()
---     vim.diagnostic.disable(0)
---
---     this one also didnt work:     vim.lsp.stop_client(vim.lsp.get_active_clients())
---   end,
--- })
 
 -- wrap and check for spell in text filetypes
 -- added to disable spelling

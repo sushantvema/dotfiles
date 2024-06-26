@@ -47,7 +47,7 @@ opt.linebreak = true
 --
 -- opt.vim_markdown_conceal = 0
 --
-vim.g.mkdp_browser = "/Applications/Safari.app"
+vim.g.mkdp_browser = "/Applications/Arc.app"
 -- vim.g.mkdp_browser = "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"
 
 -- LSP Server to use for Python.
