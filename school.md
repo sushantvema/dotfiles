@@ -1,14 +1,5 @@
 ## To Do
 
-- MATH W128a Homework 1
-    @ 2024-06-25
-    > First assignment for this class. Self-grading procedure. 
-    * [x] Read Syllabus and entire course page
-    * [ ] Watch chpater 1 videos
-    * [ ] Watch chapter 2 videos
-- Math W128a Quiz 1
-    @ 2024-06-25
-    > Available for 24 hours. 30 minutes to complete it, 10 minutes to scan it. 
 - CS 61c Lab 1: C
     @ 2024-06-25
 - CS 61C Homework 1: Number Representation, C
@@ -37,6 +28,15 @@
 - HIST 3B Quiz 1
 - CS161 Homework 1
     @ 2024-06-21
+- MATH W128a Homework 1 (Dropped)
+    @ 2024-06-25
+    > First assignment for this class. Self-grading procedure. 
+    * [x] Read Syllabus and entire course page
+    * [ ] Watch chpater 1 videos
+    * [ ] Watch chapter 2 videos
+- Math W128a Quiz 1 (Dropped)
+    @ 2024-06-25
+    > Available for 24 hours. 30 minutes to complete it, 10 minutes to scan it. 
 
 ## Archive
 
