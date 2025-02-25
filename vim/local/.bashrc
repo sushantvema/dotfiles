@@ -231,6 +231,10 @@ eval "$(zoxide init bash)"
 # Set up fzf key bindings and fuzzy completion
 eval "$(fzf --bash)"
 
+# Set up uv python package manager key bindings
+eval "$(uv generate-shell-completion bash)"
+eval "$(uvx --generate-shell-completion bash)"
+
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
 
 export IS_BASH_INIT="TRUE"
