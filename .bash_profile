@@ -1,18 +1,22 @@
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
-source ~/Repos/github.com/sushantvema/dotfiles/vim/local/.bashrc
+source ~dotfiles/vim/local/.bashrc
+
+if command -v tmux &>/dev/null && [ ! -z "$TMUX" ]; then
+  tmux source-file ~/.config/.tmux.conf
+fi
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/sashikanth/miniconda3/bin/conda' 'shell.bash' 'hook' 2>/dev/null)"
+__conda_setup="$('/opt/miniconda3/bin/conda' 'shell.bash' 'hook' 2>/dev/null)"
 if [ $? -eq 0 ]; then
-	eval "$__conda_setup"
+  eval "$__conda_setup"
 else
-	if [ -f "/Users/sashikanth/miniconda3/etc/profile.d/conda.sh" ]; then
-		. "/Users/sashikanth/miniconda3/etc/profile.d/conda.sh"
-	else
-		export PATH="/Users/sashikanth/miniconda3/bin:$PATH"
-	fi
+  if [ -f "/opt/miniconda3/etc/profile.d/conda.sh" ]; then
+    . "/opt/miniconda3/etc/profile.d/conda.sh"
+  else
+    export PATH="/opt/miniconda3/bin:$PATH"
+  fi
 fi
 unset __conda_setup
 # <<< conda initialize <<<

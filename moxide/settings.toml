@@ -10,7 +10,7 @@ heading_completions = true
 # to insert the name of the first heading in the display text area
 # [](file) -> [first heading of file.md](file)
 # If false, [](file) -> [](file) (for example)
-title_headings = true
+title_headings = false 
 
 # Show diagnostics for unresolved links; note that even if this is turned off, 
 # special semantic tokens will be sent for the unresolved links, allowing you

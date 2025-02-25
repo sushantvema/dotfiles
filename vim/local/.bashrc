@@ -35,8 +35,6 @@ export SAND="$GHREPOS"/"sandmining"
 
 # dotnet
 # export DOTNET_ROOT="/opt/homebrew/opt/dotnet/libexec"
-# ~~~~~~~~~~~~~~~~~ Python ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-export PATH=~/miniconda3/bin:$PATH
 
 # ~~~~~~~~~~~~~~~ Path configuration ~~~~~~~~~~~~~~~~~~~~~~~~
 # function from Arch Wiki, to prevent adding directories multiple times
