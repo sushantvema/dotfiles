@@ -171,31 +171,18 @@ alias lg='lazygit'
 
 # python virtual environments
 alias ve='python -m venv ./venv'
-alias va='source ./venv/bin/activate'
 alias vir='pip install -r requirements.txt'
 alias dotsync='rsync -a dotfiles/ ~/.config/'
 
 # ricing
-alias et='v ~/.config/awesome/themes/powerarrow/theme-personal.lua'
-alias ett='v ~/.config/awesome/themes/powerarrow-dark/theme-personal.lua'
-alias er='v ~/.config/awesome/rc.lua'
 alias ebr='v ~/.bashrc'
-alias ev='cd ~/.config/nvim/ && v init.lua'
 alias sbr='source ~/.bashrc'
-alias s='startx'
 alias svba='source .venv/bin/activate'
 alias task='clear && /usr/local/bin/task'
 
 # vim & second brain
 alias sb="cd \$SECOND_BRAIN"
 alias in="cd \$SECOND_BRAIN/0 Inbox/"
-alias vbn='python ~/git/python/brainfile.py'
-
-# starting programmes
-alias cards='python3 /opt/homebrew/lib/python3.11/site-packages/mtg_proxy_printer/'
-
-# fun
-alias fishies=asciiquarium
 
 # useful scripts for zettelkasten
 alias day="bash \$SCRIPTS/day"
