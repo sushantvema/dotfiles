@@ -175,8 +175,8 @@ alias vir='pip install -r requirements.txt'
 alias dotsync='rsync -a dotfiles/ ~/.config/'
 
 # ricing
-alias ebrc='v ~/.bashrc'
-alias sbrc='source ~/.bashrc'
+alias ebrc='v ~/.config/vim/local/.bashrc'
+alias sbrc='source ~/.config/vim/local/.bashrc'
 alias svba='source .venv/bin/activate'
 alias task='clear && /usr/local/bin/task'
 
