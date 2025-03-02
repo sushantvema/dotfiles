@@ -1,7 +1,12 @@
 {
   "extras": [
     "lazyvim.plugins.extras.editor.mini-files",
-    "lazyvim.plugins.extras.lang.python"
+    "lazyvim.plugins.extras.lang.python",
+    "lazvim.plugins.extras.lang.markdown",
+    "lazyvim.plugins.extras.lang.json",
+    "lazyvim.plugins.extras.lang.toml",
+    "lazyvim.plugins.extras.lang.go",
+    "lazyvim.plugins.extras.formatting.black"
   ],
   "install_version": 8,
   "news": {

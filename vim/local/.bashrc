@@ -172,7 +172,7 @@ alias gs='git status'
 # python virtual environments
 alias ve='python -m venv ./venv'
 alias vir='pip install -r requirements.txt'
-alias dotsync='rsync -a dotfiles/ ~/.config/'
+alias dotsync='rsync -a --delete --ignore-errors dotfiles/ ~/.config/'
 
 # ricing
 alias ebrc='v ~/.config/vim/local/.bashrc'
