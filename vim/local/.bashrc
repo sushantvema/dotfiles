@@ -140,7 +140,7 @@ alias v=nvim
 alias pip=pip3
 alias python=python3
 alias lg=lazygit
-alias aider='aider --env ~/.config/.aider-env'
+# alias aider='aider --env ~/.config/.aider-env'
 
 # cd
 alias sv='cd $REPOS/github.com/sushantvema/'
