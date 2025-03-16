@@ -18,7 +18,7 @@
 # Main model:
 
 ## Specify the model to use for the main chat
-#model: xxx
+model: 'claude-3-5-sonnet-20241022'
 
 ########################
 # API Keys and settings:
@@ -369,7 +369,7 @@
 #  - zzz
 
 ## Use VI editing mode in the terminal (default: False)
-#vim: false
+vim: true
 
 ## Specify the language to use in the chat (default: None, uses system settings)
 #chat-language: xxx
