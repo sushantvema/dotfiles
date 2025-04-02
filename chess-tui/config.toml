@@ -1,0 +1,8 @@
+# Path to the chess engine binary
+engine_path = "/opt/homebrew/bin/stockfish"
+
+# Display mode: "DEFAULT" or "ASCII"
+display_mode = "DEFAULT"
+
+# Logging level: "Off", "Error", "Warn", "Info", "Debug", "Trace"
+log_level = "Off"
