@@ -5,4 +5,4 @@ engine_path = "/opt/homebrew/bin/stockfish"
 display_mode = "DEFAULT"
 
 # Logging level: "Off", "Error", "Warn", "Info", "Debug", "Trace"
-log_level = "Off"
+log_level = "Info"
