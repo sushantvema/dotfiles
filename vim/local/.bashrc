@@ -238,3 +238,5 @@ eval "$(uvx --generate-shell-completion bash)"
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
 
 export IS_BASH_INIT="TRUE"
+
+export PATH="$HOME/.cargo/bin:$PATH"
