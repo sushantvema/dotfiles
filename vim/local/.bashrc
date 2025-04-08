@@ -203,30 +203,6 @@ alias personal="taskell $DOTFILES/personal.md"
 # goread alias to update config
 alias goread-update="cat dotfiles/goread/urls.yml > ~/Library/Application\ Support/goread/urls.yml"
 
-# sourcing
-# source "$HOME/.privaterc"
-
-# if [[ "$OSTYPE" == "darwin"* ]]; then
-# 	source "$HOME/.fzf.bash"
-# 	# echo "I'm on Mac!"
-#
-# 	# brew bash completion
-# 	[[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
-# else
-# 	#	source /usr/share/fzf/key-bindings.bash
-# 	#	source /usr/share/fzf/completion.bash
-# 	[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-# fi
-
-### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
-# export PATH="/Users/mischa/.rd/bin:$PATH"
-### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
-
-# Only needed for npm install on WSL
-# export NVM_DIR="$HOME/.config/nvm"
-#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-#[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
-
 eval "$(zoxide init bash)"
 # Set up fzf key bindings and fuzzy completion
 eval "$(fzf --bash)"
