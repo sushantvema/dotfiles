@@ -136,6 +136,7 @@ alias tpl="task project:LifeOS"
 
 # ~~~~~~~~~~~~~~~ Aliases ~~~~~~~~~~~~~~~~~~~~~~~~
 
+alias bat='bat --theme=zenburn --style=numbers,changes --color=always'
 alias v=nvim
 alias pip=pip3
 alias python=python3
