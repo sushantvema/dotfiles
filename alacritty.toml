@@ -1,7 +1,7 @@
 # themes from https://github.com/alacritty/alacritty-theme
 
-import = ["~/.config/alacritty/themes/themes/slate.toml"]
-live_config_reload=true
+general.import = ["~/.config/alacritty/themes/themes/slate.toml"]
+general.live_config_reload = true
 
 [font]
 size = 20
@@ -27,6 +27,5 @@ blinking = "Always"
 [mouse]
 hide_when_typing = true
 
-[shell]
-program = "/bin/bash"
-
+[terminal]
+shell = "/bin/bash"

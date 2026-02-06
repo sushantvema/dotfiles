@@ -1,6 +1,6 @@
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
-source ~dotfiles/vim/local/.bashrc
+source ~/.config/vim/local/.bashrc
 
 if command -v tmux &>/dev/null && [ ! -z "$TMUX" ]; then
   tmux source-file ~/.config/.tmux.conf

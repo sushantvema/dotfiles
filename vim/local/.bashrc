@@ -204,6 +204,8 @@ alias personal="taskell $DOTFILES/personal.md"
 # goread alias to update config
 alias goread-update="cat dotfiles/goread/urls.yml > ~/Library/Application\ Support/goread/urls.yml"
 
+alias claude="/Users/svema/.claude/local/claude"
+
 eval "$(zoxide init bash)"
 # Set up fzf key bindings and fuzzy completion
 eval "$(fzf --bash)"
@@ -217,3 +219,6 @@ export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
 export IS_BASH_INIT="TRUE"
 
 export PATH="$HOME/.cargo/bin:$PATH"
+
+export XDG_CONFIG_HOME="$HOME/.config"
+
