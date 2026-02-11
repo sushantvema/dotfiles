@@ -3,16 +3,37 @@
 
 current_index=$(tmux display-message -p '#{window_index}')
 session=$(tmux display-message -p '#{session_name}')
+now=$(date +%s)
+
+relative_time() {
+  local ts=$1
+  [ "$ts" -eq 0 ] && echo "" && return
+  local diff=$((now - ts))
+  if [ "$diff" -lt 60 ]; then
+    echo "${diff}s ago"
+  elif [ "$diff" -lt 3600 ]; then
+    echo "$((diff / 60))m ago"
+  elif [ "$diff" -lt 86400 ]; then
+    echo "$((diff / 3600))h ago"
+  else
+    echo "$((diff / 86400))d ago"
+  fi
+}
 
 window_list=$(
   tmux list-windows -t "$session" \
     -F '#{window_index} #{window_name} #{?@last_focused,#{@last_focused},0}' |
   while read -r idx name ts; do
     [ "$idx" = "$current_index" ] && continue
-    printf '%s\t%s: %s\n' "$ts" "$idx" "$name"
+    rel=$(relative_time "$ts")
+    if [ -n "$rel" ]; then
+      printf '%s\t%s: %s\t%s\n' "$ts" "$idx" "$name" "$rel"
+    else
+      printf '%s\t%s: %s\t\n' "$ts" "$idx" "$name"
+    fi
   done |
   sort -t$'\t' -k1 -rn |
-  cut -f2
+  cut -f2-
 )
 
 if [ -z "$window_list" ]; then
@@ -22,12 +43,14 @@ fi
 
 selected=$(
   echo "$window_list" |
+  column -t -s$'\t' |
   fzf-tmux -p 60%,50% \
     --no-sort \
     --prompt="MRU window> " \
     --header="Switch to window" \
     --reverse \
-    --no-info
+    --no-info \
+    --nth=1
 )
 
 [ -z "$selected" ] && exit 0
