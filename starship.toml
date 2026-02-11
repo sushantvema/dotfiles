@@ -34,9 +34,9 @@ format = '[\($state( $progress_current of $progress_total)\)]($style) '
 
 [git_status]
 conflicted = "⚔️ "
-ahead = "🏎️ 💨 ×${count} "
-behind = "🐢 ×${count} "
-diverged = "🔱 🏎️ 💨 ×${ahead_count} 🐢 ×${behind_count} "
+ahead = "⇡×${count} "
+behind = "⇣×${count} "
+diverged = "⇡×${ahead_count} ⇣×${behind_count} "
 untracked = "🛤️  ×${count} "
 stashed = "📦 "
 modified = "📝 ×${count} "
@@ -45,7 +45,7 @@ renamed = "📛 ×${count} "
 deleted = "🗑️  ×${count} "
 style = "bright-white"
 format = "$all_status$ahead_behind"
-disabled = true
+disabled = false
 
 [hostname]
 ssh_only = false
@@ -77,10 +77,10 @@ format = "[$symbol$version]($style) "
 style = "bold green"
 
 [time]
-time_format = "%T"
+time_format = "%-I:%M %p, %a, %b %-d"
 format = "🕙 $time($style) "
 style = "bright-white"
-disabled = true
+disabled = false
 
 [typst]
 format = "[$symbol($version)]($style)"
@@ -92,3 +92,43 @@ show_always = false
 
 [nodejs]
 format = "via [🤖 $version](bold green) "
+
+[kubernetes]
+disabled = false
+format = '[$symbol$context( \($namespace\))]($style) '
+symbol = "⛵ "
+style = "bold cyan"
+
+[docker_context]
+format = '[$symbol$context]($style) '
+symbol = "🐳 "
+style = "blue bold"
+only_with_files = true
+detect_files = ['Dockerfile', 'compose.yml', 'compose.yaml', 'docker-compose.yml', 'docker-compose.yaml']
+
+[gcloud]
+format = '[$symbol$project]($style) '
+symbol = "☁️ "
+style = "bold blue"
+
+[conda]
+format = '[$symbol$environment]($style) '
+symbol = "🐍 "
+style = "bold green"
+
+[golang]
+format = '[$symbol$version]($style) '
+symbol = "🐹 "
+style = "bold green"
+
+[jobs]
+format = '[$symbol$number]($style) '
+symbol = "✦ "
+style = "bold blue"
+threshold = 1
+
+[status]
+disabled = false
+format = '[$symbol$status]($style) '
+symbol = "✘ "
+style = "bold red"
