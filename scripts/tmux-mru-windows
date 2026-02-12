@@ -49,8 +49,7 @@ selected=$(
     --prompt="MRU window> " \
     --header="Switch to window" \
     --reverse \
-    --no-info \
-    --nth=1
+    --no-info
 )
 
 [ -z "$selected" ] && exit 0
