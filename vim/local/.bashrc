@@ -204,7 +204,7 @@ alias personal="taskell $DOTFILES/personal.md"
 # goread alias to update config
 alias goread-update="cat dotfiles/goread/urls.yml > ~/Library/Application\ Support/goread/urls.yml"
 
-alias claude="/Users/svema/.claude/local/claude"
+alias claude="~/.claude/local/claude"
 
 eval "$(zoxide init bash)"
 # Set up fzf key bindings and fuzzy completion
