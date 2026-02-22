@@ -1,0 +1,13 @@
+# cmux terminal configuration
+# Uses Ghostty config format: https://ghostty.org/docs/config
+
+# Font — ported from Alacritty (0xProto Nerd Font, size 20)
+# Ghostty uses "Mono" variant for proper terminal glyph width
+font-family = 0xProto Nerd Font Mono
+font-size = 30
+
+# Scrollback — default is 10000, same as cmux default
+scrollback-limit = 10000
+
+# Audible bell for fzf feedback etc.
+bell = audible

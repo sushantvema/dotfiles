@@ -194,6 +194,8 @@ alias zet="bash \$SCRIPTS/zet"
 alias fp="fzf --preview 'bat --style=numbers --color=always --line-range :500 {}'"
 # search for a file with fzf and open it in vim
 alias vf='v $(fp)'
+# fzf browser tab/history picker (Arc or Chrome)
+alias bf='ruby ~/.config/scripts/browser.fzf'
 
 # taskell aliases
 alias school="taskell $DOTFILES/school.md"
@@ -215,10 +217,12 @@ eval "$(uv generate-shell-completion bash)"
 eval "$(uvx --generate-shell-completion bash)"
 
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
+export FZF_DEFAULT_OPTS="--bind 'ctrl-y:execute-silent(realpath {} | tr -d \"\\n\" | pbcopy)+bell'"
 
 export IS_BASH_INIT="TRUE"
 
 export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="/opt/homebrew/opt/ruby/bin:/opt/homebrew/lib/ruby/gems/4.0.0/bin:$PATH"
 
 export XDG_CONFIG_HOME="$HOME/.config"
 

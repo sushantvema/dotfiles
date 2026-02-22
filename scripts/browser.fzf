@@ -1,0 +1,210 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Browser fzf integration — adapted from junegunn/everything.fzf/chrome.fzf
+# Supports Arc and Chrome on macOS via chrome-cli / arc-cli.
+
+require 'bundler/inline'
+require 'rbconfig'
+require 'tempfile'
+require 'json'
+require 'shellwords'
+
+gemfile do
+  source 'https://rubygems.org'
+  gem 'sqlite3'
+  gem 'ansi256'
+end
+
+module BrowserFzf
+  extend self
+
+  # Detect which browser to target.
+  # Prefer Arc if running, fall back to Chrome.
+  def detect_browser
+    arc_running = !`pgrep -x Arc`.strip.empty?
+    chrome_running = !`pgrep -x "Google Chrome"`.strip.empty?
+
+    if arc_running
+      {
+        name: 'Arc',
+        cli: 'arc-cli',
+        base_path: 'Library/Application Support/Arc/User Data',
+        process_name: 'Arc',
+        has_bookmarks: false
+      }
+    elsif chrome_running
+      {
+        name: 'Chrome',
+        cli: 'chrome-cli',
+        base_path: 'Library/Application Support/Google/Chrome',
+        process_name: 'Chrome',
+        has_bookmarks: true
+      }
+    else
+      # Default to Arc
+      {
+        name: 'Arc',
+        cli: 'arc-cli',
+        base_path: 'Library/Application Support/Arc/User Data',
+        process_name: 'Arc',
+        has_bookmarks: false
+      }
+    end
+  end
+
+  BROWSER = detect_browser
+  CLI = BROWSER[:cli]
+  BASE_PATH = BROWSER[:base_path]
+  BROWSER_NAME = BROWSER[:name]
+  HAS_BOOKMARKS = BROWSER[:has_bookmarks]
+  PROCESS_NAME = BROWSER[:process_name]
+
+  OPEN_COMMAND = 'open {+2}'
+  CLIP_COMMAND = 'echo -n {+2} | pbcopy'
+  FOCUS_COMMAND = <<~APPLESCRIPT
+    osascript << 'EOF'
+    tell application "System Events"
+      tell process "#{PROCESS_NAME}"
+        set frontmost to true
+      end tell
+    end tell
+    EOF
+  APPLESCRIPT
+
+  DELIMITER = "\a"
+  RS = "\x0"
+
+  def run(type)
+    if type == :bookmarks && !HAS_BOOKMARKS
+      $stderr.puts "#{BROWSER_NAME} does not support Chrome-style bookmarks. Showing history instead."
+      type = :history
+    end
+
+    IO.popen(fzf(type), 'r+') do |io|
+      list(type, io)
+    end
+  rescue Errno::EPIPE
+    # Ignore broken pipe error
+  end
+
+  def list(type, io = $stdout)
+    if type == :bookmarks && !HAS_BOOKMARKS
+      type = :history
+    end
+
+    method(type).call.each do |args|
+      format(io, *args)
+    end
+  end
+
+  private
+
+  def path(name)
+    File.join(Dir.home, BASE_PATH, 'Default', name)
+  end
+
+  def fzf(name)
+    bookmark_bind = if HAS_BOOKMARKS
+      "--bind 'ctrl-b:reload(ruby #{__FILE__.shellescape} --list b)+change-multi+change-border-label( #{BROWSER_NAME}::Bookmarks )+top'"
+    else
+      ""
+    end
+
+    header_parts = ['CTRL-T: Tabs', 'CTRL-H: History']
+    header_parts << 'CTRL-B: Bookmarks' if HAS_BOOKMARKS
+    header_parts << 'CTRL-Y: Copy'
+    header = header_parts.join(' ╱ ')
+
+    <<~CMD
+      fzf --ansi --read0 #{'--multi' unless name == :tabs} --info inline-right --reverse --scheme history \\
+          --header-border --gap \\
+          --highlight-line --height 100% --wrap word --wrap-sign ' ↳ ' \\
+          --border --border-label " #{BROWSER_NAME}::#{name.capitalize} " --delimiter "#{DELIMITER}" \\
+          --header '╱ #{header} ╱' \\
+          --with-shell 'bash -c' \\
+          --with-nth "{1}\n · {2}" \\
+          --bind 'enter:execute-silent(
+                    if [[ {3} ]]; then
+                      #{CLI} activate -t {3}
+                      #{FOCUS_COMMAND}
+                    else
+                      #{OPEN_COMMAND}
+                    fi)+deselect-all' \\
+          --bind 'ctrl-y:execute-silent(#{CLIP_COMMAND})+bell+deselect-all' \\
+          #{bookmark_bind} \\
+          --bind 'ctrl-t:reload(ruby #{__FILE__.shellescape} --list t)+change-multi(0)+change-border-label( #{BROWSER_NAME}::Tabs )+top' \\
+          --bind 'ctrl-h:reload(ruby #{__FILE__.shellescape} --list h)+change-multi+change-border-label( #{BROWSER_NAME}::History )+top' \\
+          --bind 'ctrl-w:transform:
+                  [[ $FZF_BORDER_LABEL =~ Tabs ]] || exit
+                  #{CLI} close -t {3} > /dev/null
+                  echo "reload:ruby #{__FILE__.shellescape} --list t"
+          '
+    CMD
+  end
+
+  def format(io, title, url, time, id = nil)
+    time = Time.at(time).strftime('%F %T') if time.is_a?(Integer)
+    io.print "#{title} (#{time.yellow})".strip
+    io.print DELIMITER
+    io.print url.blue.dim
+    if id
+      io.print DELIMITER
+      io.print id
+    end
+    io.print RS
+  end
+
+  def history
+    Tempfile.create('browser') do |temp|
+      temp.close
+      FileUtils.cp(path('History'), temp.path)
+      SQLite3::Database.open(temp.path) do |db|
+        rows = db.execute('select title, url, last_visit_time from urls order by last_visit_time desc')
+        rows.map do |title, url, time|
+          [title, url, to_unix(time)]
+        end
+      end
+    end
+  end
+
+  def bookmarks
+    build = lambda do |parent, json|
+      name = [parent, json[:name]].compact.join('/')
+      if json[:type] == 'folder'
+        json[:children].flat_map { |child| build[name, child] }
+      else
+        [[name, json[:url], to_unix(json.values_at(:date_last_used, :date_added).max)]]
+      end
+    end
+
+    JSON.load_file(path('Bookmarks'), symbolize_names: true)
+        .fetch(:roots, {})
+        .values
+        .flat_map { |e| build[nil, e] }
+        .sort_by(&:last)
+        .reverse
+  end
+
+  def tabs
+    `#{CLI} list tablinks`.each_line.filter_map.with_index do |line, idx|
+      /^\[(?:[^\]]*:)?([^\]]+)\] title: (.+?), url: (.+?)$/.match(line) do |m|
+        [m[2], m[3], idx.succ.to_s, m[1]]
+      end
+    end
+  end
+
+  def to_unix(time)
+    time.to_i / 1_000_000 - 11_644_473_600
+  end
+end
+
+method = ARGV.delete('--list') ? :list : :run
+type = case ARGV[0]&.downcase
+       when 'h' then :history
+       when 'b' then :bookmarks
+       when 't', nil then :tabs
+       else abort "Usage: #{__FILE__} [t|h|b]"
+       end
+
+BrowserFzf.send(method, type)
