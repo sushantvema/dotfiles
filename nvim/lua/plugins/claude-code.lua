@@ -8,6 +8,9 @@ return {
         position = "vertical",
         split_ratio = 0.4,
       },
+      command_variants = {
+        continue = "--continue --dangerously-skip-permissions",
+      },
       keymaps = {
         toggle = {
           normal = "<leader>ac",
