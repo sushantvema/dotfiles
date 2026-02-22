@@ -11,7 +11,7 @@ GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-CLAUDE=~/.claude/local/claude
+CLAUDE=~/.local/bin/claude
 
 echo -e "${BLUE}=== Claude Code MCP Server Setup ===${NC}"
 
