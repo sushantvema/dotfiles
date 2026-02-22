@@ -37,7 +37,7 @@ fi
 
 echo -e "${GREEN}Adding Supabase...${NC}"
 $CLAUDE mcp add --scope user -t stdio supabase \
-  --env HERCULES_SUPABASE_PROD_PAT="$HERCULES_SUPABASE_PROD_PAT" \
+  --env SUPABASE_ACCESS_TOKEN="$HERCULES_SUPABASE_PROD_PAT" \
   -- npx -y @supabase/mcp-server-supabase@latest --read-only --project-ref=ehvopzzidrfxtvsfrfkq
 
 echo ""
