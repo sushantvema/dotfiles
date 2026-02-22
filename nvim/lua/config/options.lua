@@ -3,3 +3,5 @@
 -- Add any additional options here
 
 vim.opt.foldmethod = "manual"
+vim.diagnostic.enable(false)
+vim.opt.spell = false

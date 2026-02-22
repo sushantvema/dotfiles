@@ -2,3 +2,4 @@ lazy-lock.json
 .DS_Store
 .aider*
 .aider.conf.yml
+.claude/.secrets

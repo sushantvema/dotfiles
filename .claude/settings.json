@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'sounds=(/System/Library/Sounds/*.aiff); afplay \"${sounds[RANDOM % ${#sounds[@]}]}\"'"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "input=$(cat); transcript=$(echo \"$input\" | jq -r '.transcript_path'); if [ -f \"$transcript\" ]; then timestamp=$(grep -E '^## (User|Human) \\(' \"$transcript\" | tail -1 | sed -E 's/.*\\((.*)\\)/\\1/'); [ -n \"$timestamp\" ] && echo \"Last message: $timestamp\" || echo \"No messages yet\"; else echo \"No transcript\"; fi"
+  },
+  "enabledPlugins": {
+    "Notion@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "feedbackSurveyState": {
+    "lastShownTime": 1754155880797
+  },
+  "model": "opus[1m]",
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  }
+}
