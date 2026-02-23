@@ -32,6 +32,12 @@ add_mcp linear -t stdio linear -- npx -y mcp-remote https://mcp.linear.app/sse
 echo -e "${GREEN}Adding Logfire...${NC}"
 add_mcp logfire -t http logfire https://logfire-us.pydantic.dev/mcp
 
+echo -e "${GREEN}Adding Parallel Search...${NC}"
+add_mcp parallel-search -t http parallel-search https://search-mcp.parallel.ai/mcp
+
+echo -e "${GREEN}Adding Parallel Task...${NC}"
+add_mcp parallel-task -t http parallel-task https://task-mcp.parallel.ai/mcp
+
 # --- Supabase (requires token) ---
 
 if [ -z "$HERCULES_SUPABASE_PROD_PAT" ]; then
