@@ -5,3 +5,4 @@
 vim.opt.foldmethod = "manual"
 vim.diagnostic.enable(false)
 vim.opt.spell = false
+vim.opt.shell = "/opt/homebrew/bin/bash"

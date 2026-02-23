@@ -8,6 +8,9 @@ set -o vi
 bind -x '"\C-l":clear'
 # ~~~~~~~~~~~~~~~ Environment Variables ~~~~~~~~~~~~~~~~~~~~~~~~
 
+# Ensure Neovim terminal and other non-interactive shells source this file
+export BASH_ENV="$HOME/.config/vim/local/.bashrc"
+
 export VISUAL=nvim
 export EDITOR=nvim
 export v=nvim
