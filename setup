@@ -11,28 +11,10 @@ ln -sf "$PWD/nvim" "$XDG_CONFIG_HOME"/nvim
 
 # Packages
 
-# install brew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# install brew if not present
+if ! command -v brew &>/dev/null; then
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
 
-brew install --cask alacritty
-
-# brew packages Mac
-# amethyst fzf nvim exa hugo bash-completion@2 newsboat kubectl starship
-
-# ubuntu packages apt
-brew install ripgrep gh starship
-
-# ubuntu apt neovim setup
-brew install gcc g++ unzip
-
-# ubuntu brew for vim and neovim setup
-# sudo apt install fd fzf kubectl kubectx derailed/k9s/k9s
-brew install fd fzf
-
-# ubuntu brew for neovim setup
-brew install neovim go lazygit
-
-# ubuntu specific notes
-# create symbolic link to neovim from vim when not using neovim on
-# Ubuntu systems, because I use the v alias everywhere.
-# sudo ln -sf /usr/bin/vim /usr/bin/nvim
+# install everything from Brewfile
+brew bundle --file="$PWD/Brewfile"

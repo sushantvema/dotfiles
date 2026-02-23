@@ -1,0 +1,350 @@
+#!/bin/bash
+set -euo pipefail
+
+# ── Colors ──────────────────────────────────────────────────────────
+RED='\033[0;31m'    GREEN='\033[0;32m'  YELLOW='\033[0;33m'
+BLUE='\033[0;34m'   CYAN='\033[0;36m'   BOLD='\033[1m'
+RESET='\033[0m'
+
+# ── Defaults ────────────────────────────────────────────────────────
+DRY_RUN=false
+NO_EMAIL=false
+NO_REPORT=false
+SKIP_ARCHIVED=false
+EMAIL_TO="sushant@harperinsure.com"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# ── Counters ────────────────────────────────────────────────────────
+CLONED=0  UPDATED=0  CURRENT=0  SKIPPED=0  FAILED=0
+
+# ── Accumulators ────────────────────────────────────────────────────
+SYNC_LOG=""
+
+# ── Usage ───────────────────────────────────────────────────────────
+usage() {
+  cat <<EOF
+Usage: org-sync <org-name> [directory] [options]
+
+Sync all repos from a GitHub organization.
+
+Arguments:
+  <org-name>       GitHub organization name (required)
+  [directory]      Base directory (default: \$REPOS/github.com/<org-name>)
+
+Options:
+  --dry-run        Show what would happen without doing anything
+  --no-email       Skip email step
+  --no-report      Skip Claude report generation
+  --skip-archived  Skip archived repositories
+  --help           Show this help
+EOF
+  exit 0
+}
+
+# ── Logging helpers ─────────────────────────────────────────────────
+info()  { printf "${BLUE}[INFO]${RESET}  %s\n" "$*"; }
+ok()    { printf "${GREEN}[OK]${RESET}    %s\n" "$*"; }
+warn()  { printf "${YELLOW}[WARN]${RESET}  %s\n" "$*"; }
+err()   { printf "${RED}[ERR]${RESET}   %s\n" "$*"; }
+dry()   { printf "${CYAN}[DRY-RUN]${RESET} %s\n" "$*"; }
+
+# ── Parse arguments ─────────────────────────────────────────────────
+ORG=""
+BASE_DIR=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --dry-run)       DRY_RUN=true; shift ;;
+    --no-email)      NO_EMAIL=true; shift ;;
+    --no-report)     NO_REPORT=true; shift ;;
+    --skip-archived) SKIP_ARCHIVED=true; shift ;;
+    --help|-h)       usage ;;
+    -*)              err "Unknown option: $1"; usage ;;
+    *)
+      if [[ -z "$ORG" ]]; then
+        ORG="$1"
+      elif [[ -z "$BASE_DIR" ]]; then
+        BASE_DIR="$1"
+      else
+        err "Unexpected argument: $1"; usage
+      fi
+      shift
+      ;;
+  esac
+done
+
+if [[ -z "$ORG" ]]; then
+  err "Organization name is required."
+  usage
+fi
+
+BASE_DIR="${BASE_DIR:-${REPOS:-$HOME/Repos}/github.com/$ORG}"
+
+# ── Source secrets ──────────────────────────────────────────────────
+SECRETS_FILE="$HOME/.claude/.secrets"
+if [[ -f "$SECRETS_FILE" ]]; then
+  # shellcheck disable=SC1090
+  source "$SECRETS_FILE"
+fi
+
+# ── Step 1: Verify GitHub access ───────────────────────────────────
+info "Verifying GitHub CLI access..."
+
+if ! command -v gh &>/dev/null; then
+  err "gh CLI is not installed. Install it: https://cli.github.com"
+  exit 1
+fi
+
+if ! gh auth status &>/dev/null; then
+  err "gh CLI is not authenticated. Run: gh auth login"
+  exit 1
+fi
+
+ORG_LOGIN=$(gh api "/orgs/$ORG" --jq '.login' 2>/dev/null) || {
+  err "Cannot access organization '$ORG'. Check your permissions."
+  exit 1
+}
+ok "Authenticated. Organization: $ORG_LOGIN"
+
+# ── Step 2: List all org repos ──────────────────────────────────────
+info "Fetching repositories for $ORG..."
+
+JQ_FILTER='.[] | {name: .name, clone_url: .clone_url, default_branch: .default_branch, archived: .archived}'
+if [[ "$SKIP_ARCHIVED" == true ]]; then
+  JQ_FILTER='.[] | select(.archived == false) | {name: .name, clone_url: .clone_url, default_branch: .default_branch, archived: .archived}'
+fi
+
+REPOS_JSON=$(gh api "/orgs/$ORG/repos" --paginate --jq "$JQ_FILTER" 2>/dev/null) || {
+  err "Failed to fetch repositories."
+  exit 1
+}
+
+REPO_COUNT=$(echo "$REPOS_JSON" | jq -s 'length')
+ok "Found $REPO_COUNT repositories."
+
+if [[ "$REPO_COUNT" -eq 0 ]]; then
+  warn "No repositories to sync."
+  exit 0
+fi
+
+# ── Ensure base directory exists ────────────────────────────────────
+if [[ "$DRY_RUN" == false ]]; then
+  mkdir -p "$BASE_DIR"
+else
+  dry "Would create directory: $BASE_DIR"
+fi
+
+# ── Step 3: Process each repo ───────────────────────────────────────
+info "Syncing repos into $BASE_DIR..."
+echo ""
+
+echo "$REPOS_JSON" | jq -s '.[]' -c | while IFS= read -r repo; do
+  NAME=$(echo "$repo" | jq -r '.name')
+  CLONE_URL=$(echo "$repo" | jq -r '.clone_url')
+  DEFAULT_BRANCH=$(echo "$repo" | jq -r '.default_branch')
+  ARCHIVED=$(echo "$repo" | jq -r '.archived')
+  REPO_DIR="$BASE_DIR/$NAME"
+
+  printf "${BOLD}── %s${RESET}" "$NAME"
+  [[ "$ARCHIVED" == "true" ]] && printf " ${YELLOW}(archived)${RESET}"
+  echo ""
+
+  # Clone if not present
+  if [[ ! -d "$REPO_DIR/.git" ]]; then
+    if [[ "$DRY_RUN" == true ]]; then
+      dry "Would clone $ORG/$NAME into $REPO_DIR"
+      SYNC_LOG+="CLONED: $NAME (dry-run)"$'\n'
+    else
+      if gh repo clone "$ORG/$NAME" "$REPO_DIR" 2>/dev/null; then
+        ok "Cloned $NAME"
+        SYNC_LOG+="CLONED: $NAME"$'\n'
+      else
+        err "Failed to clone $NAME"
+        SYNC_LOG+="FAILED: $NAME (clone error)"$'\n'
+        # Increment via temp file since we're in a pipeline subshell
+        echo "FAILED" >> "$BASE_DIR/.org-sync-counts"
+        continue
+      fi
+      echo "CLONED" >> "$BASE_DIR/.org-sync-counts"
+    fi
+    continue
+  fi
+
+  # Update existing repo in a subshell
+  if [[ "$DRY_RUN" == true ]]; then
+    dry "Would stash (if dirty), checkout $DEFAULT_BRANCH, pull, restore"
+    SYNC_LOG+="WOULD-UPDATE: $NAME"$'\n'
+    continue
+  fi
+
+  (
+    cd "$REPO_DIR"
+
+    PREV_BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD)
+
+    # Stash if dirty
+    STASHED=false
+    if ! git diff --quiet HEAD 2>/dev/null || ! git diff --cached --quiet HEAD 2>/dev/null; then
+      STASH_MSG="org-sync auto-stash $(date +%Y-%m-%dT%H:%M:%S)"
+      git stash push -m "$STASH_MSG" --include-untracked 2>/dev/null && STASHED=true
+    fi
+
+    # Checkout default branch
+    if [[ "$PREV_BRANCH" != "$DEFAULT_BRANCH" ]]; then
+      git checkout "$DEFAULT_BRANCH" 2>/dev/null || {
+        err "  Cannot checkout $DEFAULT_BRANCH"
+        [[ "$STASHED" == true ]] && git stash pop 2>/dev/null
+        echo "FAILED" >> "$BASE_DIR/.org-sync-counts"
+        exit 1
+      }
+    fi
+
+    OLD_HEAD=$(git rev-parse HEAD)
+
+    # Pull — prefer ff-only, fallback to regular pull
+    if ! git pull --ff-only 2>/dev/null; then
+      git pull 2>/dev/null || {
+        err "  Pull failed for $NAME"
+        git checkout "$PREV_BRANCH" 2>/dev/null
+        [[ "$STASHED" == true ]] && git stash pop 2>/dev/null
+        echo "FAILED" >> "$BASE_DIR/.org-sync-counts"
+        exit 1
+      }
+    fi
+
+    NEW_HEAD=$(git rev-parse HEAD)
+
+    # Log changes
+    if [[ "$OLD_HEAD" != "$NEW_HEAD" ]]; then
+      CHANGES=$(git log --oneline "$OLD_HEAD..$NEW_HEAD" 2>/dev/null)
+      ok "Updated $NAME ($DEFAULT_BRANCH)"
+      echo "$CHANGES" | while IFS= read -r line; do
+        printf "     %s\n" "$line"
+      done
+      echo "UPDATED:$NAME:$OLD_HEAD:$NEW_HEAD" >> "$BASE_DIR/.org-sync-counts"
+    else
+      printf "${GREEN}[OK]${RESET}    %s (already current)\n" "$NAME"
+      echo "CURRENT" >> "$BASE_DIR/.org-sync-counts"
+    fi
+
+    # Restore previous branch
+    if [[ "$PREV_BRANCH" != "$DEFAULT_BRANCH" ]]; then
+      git checkout "$PREV_BRANCH" 2>/dev/null
+    fi
+
+    # Restore stash
+    if [[ "$STASHED" == true ]]; then
+      git stash pop 2>/dev/null || warn "  Could not pop stash for $NAME"
+    fi
+  ) || {
+    err "Failed processing $NAME"
+    echo "FAILED" >> "$BASE_DIR/.org-sync-counts"
+  }
+
+done
+
+# ── Read counters from temp file (pipeline subshell workaround) ─────
+COUNTS_FILE="$BASE_DIR/.org-sync-counts"
+if [[ -f "$COUNTS_FILE" ]]; then
+  CLONED=$(grep -c "^CLONED" "$COUNTS_FILE" 2>/dev/null || true)
+  UPDATED=$(grep -c "^UPDATED" "$COUNTS_FILE" 2>/dev/null || true)
+  CURRENT=$(grep -c "^CURRENT" "$COUNTS_FILE" 2>/dev/null || true)
+  FAILED=$(grep -c "^FAILED" "$COUNTS_FILE" 2>/dev/null || true)
+
+  # Build detailed log for report
+  SYNC_LOG=""
+  while IFS= read -r line; do
+    case "$line" in
+      CLONED)        SYNC_LOG+="CLONED: (new repo)"$'\n' ;;
+      CURRENT)       SYNC_LOG+="CURRENT: (no changes)"$'\n' ;;
+      FAILED)        SYNC_LOG+="FAILED: (error)"$'\n' ;;
+      UPDATED:*)
+        REPO_NAME=$(echo "$line" | cut -d: -f2)
+        OLD_H=$(echo "$line" | cut -d: -f3)
+        NEW_H=$(echo "$line" | cut -d: -f4)
+        COMMIT_LOG=$(cd "$BASE_DIR/$REPO_NAME" && git log --oneline "$OLD_H..$NEW_H" 2>/dev/null || echo "(could not read log)")
+        SYNC_LOG+="UPDATED: $REPO_NAME"$'\n'"$COMMIT_LOG"$'\n'
+        ;;
+    esac
+  done < "$COUNTS_FILE"
+
+  rm -f "$COUNTS_FILE"
+fi
+
+SKIPPED=$((REPO_COUNT - CLONED - UPDATED - CURRENT - FAILED))
+[[ "$SKIPPED" -lt 0 ]] && SKIPPED=0
+
+# ── Step 4: Terminal summary ────────────────────────────────────────
+echo ""
+printf "${BOLD}═══ Sync Summary: %s ═══${RESET}\n" "$ORG"
+printf "${GREEN}  Cloned:   %d${RESET}\n" "$CLONED"
+printf "${BLUE}  Updated:  %d${RESET}\n" "$UPDATED"
+printf "  Current:  %d\n" "$CURRENT"
+[[ "$SKIPPED" -gt 0 ]] && printf "${YELLOW}  Skipped:  %d${RESET}\n" "$SKIPPED"
+[[ "$FAILED" -gt 0 ]]  && printf "${RED}  Failed:   %d${RESET}\n" "$FAILED"
+echo ""
+
+# ── Step 5: Claude report ──────────────────────────────────────────
+REPORT_FILE=""
+if [[ "$NO_REPORT" == true ]]; then
+  info "Skipping report generation (--no-report)."
+elif [[ "$DRY_RUN" == true ]]; then
+  dry "Would generate Claude report from sync results."
+else
+  info "Generating change report with Claude..."
+  REPORT_FILE=$(mktemp /tmp/org-sync-report.XXXXXX.md)
+
+  REPORT_PROMPT="You are summarizing a GitHub organization sync. Produce a concise Markdown report with:
+1. An executive summary (2-3 sentences)
+2. A status table (repo | status | detail)
+3. Per-repo change highlights for any repos that had new commits
+
+Organization: $ORG
+Date: $(date +%Y-%m-%d)
+Total repos: $REPO_COUNT
+
+Sync results:
+$SYNC_LOG"
+
+  if command -v claude &>/dev/null; then
+    echo "$REPORT_PROMPT" | claude -p --model sonnet > "$REPORT_FILE" 2>/dev/null && {
+      ok "Report saved to $REPORT_FILE"
+    } || {
+      warn "Claude report generation failed. Falling back to raw summary."
+      echo "$SYNC_LOG" > "$REPORT_FILE"
+    }
+  else
+    warn "Claude CLI not found. Saving raw sync log as report."
+    echo "$SYNC_LOG" > "$REPORT_FILE"
+  fi
+fi
+
+# ── Step 6: Email report ───────────────────────────────────────────
+if [[ "$NO_EMAIL" == true ]]; then
+  info "Skipping email (--no-email)."
+elif [[ "$DRY_RUN" == true ]]; then
+  dry "Would email report to $EMAIL_TO."
+elif [[ -z "$REPORT_FILE" || ! -f "$REPORT_FILE" ]]; then
+  warn "No report file to email."
+else
+  if [[ -z "${GMAIL_APP_PASSWORD:-}" || -z "${GMAIL_SENDER:-}" ]]; then
+    warn "Gmail credentials not set. Add GMAIL_APP_PASSWORD and GMAIL_SENDER to $SECRETS_FILE"
+  else
+    info "Emailing report to $EMAIL_TO..."
+    python3 "$SCRIPT_DIR/org-sync-email.py" \
+      --from "$GMAIL_SENDER" \
+      --to "$EMAIL_TO" \
+      --subject "org-sync: $ORG — $(date +%Y-%m-%d)" \
+      --body-file "$REPORT_FILE" \
+      --password "$GMAIL_APP_PASSWORD" && {
+      ok "Email sent to $EMAIL_TO"
+    } || {
+      warn "Email sending failed."
+    }
+  fi
+fi
+
+# ── Cleanup ─────────────────────────────────────────────────────────
+[[ -n "$REPORT_FILE" && -f "$REPORT_FILE" ]] && rm -f "$REPORT_FILE"
+
+ok "Done."

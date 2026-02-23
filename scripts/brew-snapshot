@@ -1,0 +1,48 @@
+#!/bin/bash
+set -euo pipefail
+
+# Re-dump the current Homebrew state into the dotfiles Brewfile.
+# Usage: brew-snapshot [--commit]
+
+DOTFILES="${DOTFILES:-$HOME/Repos/github.com/$(git config user.name 2>/dev/null || echo "$USER")/dotfiles}"
+BREWFILE="$DOTFILES/Brewfile"
+COMMIT=false
+
+for arg in "$@"; do
+  case "$arg" in
+    --commit) COMMIT=true ;;
+    --help|-h)
+      echo "Usage: brew-snapshot [--commit]"
+      echo "  --commit  Stage and commit the updated Brewfile"
+      exit 0
+      ;;
+    *) echo "Unknown option: $arg"; exit 1 ;;
+  esac
+done
+
+if [[ ! -d "$DOTFILES" ]]; then
+  echo "Dotfiles directory not found: $DOTFILES"
+  exit 1
+fi
+
+echo "Dumping Homebrew state → $BREWFILE"
+brew bundle dump --file="$BREWFILE" --force
+
+FORMULA_COUNT=$(grep -c '^brew ' "$BREWFILE" || true)
+CASK_COUNT=$(grep -c '^cask ' "$BREWFILE" || true)
+TAP_COUNT=$(grep -c '^tap ' "$BREWFILE" || true)
+CARGO_COUNT=$(grep -c '^cargo ' "$BREWFILE" || true)
+GO_COUNT=$(grep -c '^go ' "$BREWFILE" || true)
+
+echo "Recorded: ${TAP_COUNT} taps, ${FORMULA_COUNT} formulae, ${CASK_COUNT} casks, ${CARGO_COUNT} cargo, ${GO_COUNT} go"
+
+if [[ "$COMMIT" == true ]]; then
+  cd "$DOTFILES"
+  if git diff --quiet Brewfile 2>/dev/null; then
+    echo "Brewfile unchanged — nothing to commit."
+  else
+    git add Brewfile
+    git commit -m "brew-snapshot: update Brewfile ($(date +%Y-%m-%d))"
+    echo "Committed."
+  fi
+fi
