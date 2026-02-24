@@ -171,7 +171,6 @@ alias e='exit'
 
 # git
 alias gp='git pull'
-alias gs='git status'
 
 # python virtual environments
 alias ve='python -m venv ./venv'
