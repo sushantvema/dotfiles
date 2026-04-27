@@ -217,6 +217,11 @@ eval "$(fzf --bash)"
 eval "$(uv generate-shell-completion bash)"
 eval "$(uvx --generate-shell-completion bash)"
 
+# dstask completion (alias intentionally omitted: `t` is tmux, `task` is taskwarrior)
+if command -v dstask >/dev/null 2>&1; then
+  source <(dstask bash-completion)
+fi
+
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
 export FZF_DEFAULT_OPTS="--bind 'ctrl-y:execute-silent(realpath {} | tr -d \"\\n\" | pbcopy)+bell'"
 
