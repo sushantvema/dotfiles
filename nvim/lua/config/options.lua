@@ -17,3 +17,5 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.opt.tabstop = 4 -- render tabs as 4 spaces wide
+
+vim.g.lazyvim_ts_lsp = "vtsls"
