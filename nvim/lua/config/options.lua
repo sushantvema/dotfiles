@@ -3,7 +3,7 @@
 -- Add any additional options here
 
 vim.opt.foldmethod = "manual"
-vim.diagnostic.enable(false)
+vim.diagnostic.enable(true)
 vim.opt.spell = false
 vim.opt.shell = "/opt/homebrew/bin/bash"
 vim.opt.wrap = true
@@ -18,4 +18,4 @@ vim.api.nvim_create_autocmd("FileType", {
 
 vim.opt.tabstop = 4 -- render tabs as 4 spaces wide
 
-vim.g.lazyvim_ts_lsp = "vtsls"
+vim.g.lazyvim_ts_lsp = "tsgo"
