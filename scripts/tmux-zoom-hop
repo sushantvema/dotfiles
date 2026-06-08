@@ -1,0 +1,43 @@
+#!/bin/bash
+# tmux pane picker — fzf over current window's panes, preserves zoom state
+
+window_id=$(tmux display-message -p '#{window_id}')
+current_pane=$(tmux display-message -p '#{pane_id}')
+was_zoomed=$(tmux display-message -p '#{window_zoomed_flag}')
+
+pane_list=$(
+  tmux list-panes -t "$window_id" \
+    -F '#{pane_id}	#{pane_index}: #{pane_current_command}	#{=40:pane_title}' |
+  while IFS=$'\t' read -r pid label title; do
+    [ "$pid" = "$current_pane" ] && continue
+    printf '%s\t%s\t%s\n' "$pid" "$label" "$title"
+  done
+)
+
+if [ -z "$pane_list" ]; then
+  tmux display-message "No other panes"
+  exit 0
+fi
+
+selected=$(
+  echo "$pane_list" |
+  column -t -s$'\t' |
+  fzf-tmux -p 60%,50% \
+    --no-sort \
+    --prompt="Pane> " \
+    --header="Hop pane (zoom preserved)" \
+    --reverse \
+    --no-info \
+    --preview 'tmux capture-pane -ep -t {1}' \
+    --preview-window 'right:60%'
+)
+
+[ -z "$selected" ] && exit 0
+
+target_pid=$(echo "$selected" | awk '{print $1}')
+
+tmux select-pane -t "$target_pid"
+
+if [ "$was_zoomed" = "1" ]; then
+  tmux resize-pane -Z -t "$window_id"
+fi
