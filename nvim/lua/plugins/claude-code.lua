@@ -14,7 +14,7 @@ return {
       keymaps = {
         toggle = {
           normal = "<leader>ac",
-          terminal = "<leader>ac",
+          terminal = false,
           variants = {
             continue = "<leader>aC",
           },
