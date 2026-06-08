@@ -5,6 +5,8 @@
 # and running very quickly.
 tmux source .tmux.conf
 ln -sf "$PWD/nvim" "$XDG_CONFIG_HOME"/nvim
+mkdir -p "$XDG_CONFIG_HOME"/posting
+ln -sf "$PWD/posting/config.yaml" "$XDG_CONFIG_HOME"/posting/config.yaml
 # ln -sf "$PWD/skhdrc" "$XDG_CONFIG_HOME"/skhd/skhdrc
 # ln -sf "$PWD/newsboat/config" "$HOME"/.newsboat/config
 # ln -sf "$PWD/newsboat/urls" "$HOME"/.newsboat/urls
