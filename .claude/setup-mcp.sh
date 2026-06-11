@@ -40,16 +40,16 @@ add_mcp parallel-task -t http parallel-task https://task-mcp.parallel.ai/mcp
 
 # --- Supabase (requires token) ---
 
-if [ -z "$HERCULES_SUPABASE_PROD_PAT" ]; then
-  echo -e "${RED}HERCULES_SUPABASE_PROD_PAT not set.${NC}"
+if [ -z "$SUPABASE_ACCESS_TOKEN" ]; then
+  echo -e "${RED}SUPABASE_ACCESS_TOKEN not set.${NC}"
   echo -n "Enter your Supabase personal access token: "
-  read -s HERCULES_SUPABASE_PROD_PAT
+  read -s SUPABASE_ACCESS_TOKEN
   echo
 fi
 
 echo -e "${GREEN}Adding Supabase...${NC}"
 add_mcp supabase -t stdio supabase \
-  --env SUPABASE_ACCESS_TOKEN="$HERCULES_SUPABASE_PROD_PAT" \
+  --env SUPABASE_ACCESS_TOKEN="$SUPABASE_ACCESS_TOKEN" \
   -- npx -y @supabase/mcp-server-supabase@latest --read-only --project-ref=ehvopzzidrfxtvsfrfkq
 
 echo ""

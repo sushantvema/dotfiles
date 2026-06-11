@@ -5,6 +5,7 @@
 # and running very quickly.
 tmux source .tmux.conf
 ln -sf "$PWD/nvim" "$XDG_CONFIG_HOME"/nvim
+ln -sf "$PWD/opencode" "$XDG_CONFIG_HOME"/opencode
 mkdir -p "$XDG_CONFIG_HOME"/posting
 ln -sf "$PWD/posting/config.yaml" "$XDG_CONFIG_HOME"/posting/config.yaml
 # ln -sf "$PWD/skhdrc" "$XDG_CONFIG_HOME"/skhd/skhdrc
