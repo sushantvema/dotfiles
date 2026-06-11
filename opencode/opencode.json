@@ -1,5 +1,8 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "experimental": {
+    "mcp_timeout": 10000
+  },
   "lsp": true,
   "mcp": {
     "supabase": {
@@ -18,6 +21,23 @@
     "linear": {
       "type": "remote",
       "url": "https://mcp.linear.app/mcp"
+    },
+    "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp"
+    },
+    "logfire": {
+      "type": "remote",
+      "url": "https://logfire-us.pydantic.dev/mcp"
     }
+  },
+  "watcher": {
+    "ignore": [
+      ".git/**",
+      "node_modules/**",
+      ".venv/**",
+      ".pytest_cache/**",
+      ".mypy_cache/**"
+    ]
   }
 }
