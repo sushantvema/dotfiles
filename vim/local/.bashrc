@@ -172,6 +172,16 @@ alias e='exit'
 # git
 alias gp='git pull'
 
+git-cleanup() {
+  local branch="${1:-main}"
+  git checkout "$branch" && git pull -p
+  local gone
+  gone=$(git branch -vv | grep ': gone]' | awk '{print $1}' | grep -vE '^(main|dev|master)$')
+  if [ -n "$gone" ]; then
+    echo "$gone" | xargs git branch -D
+  fi
+}
+
 # python virtual environments
 alias ve='python -m venv ./venv'
 alias vir='pip install -r requirements.txt'
@@ -231,4 +241,3 @@ export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
 export PATH="/opt/homebrew/opt/ruby/bin:/opt/homebrew/lib/ruby/gems/4.0.0/bin:$PATH"
 
 export XDG_CONFIG_HOME="$HOME/.config"
-
