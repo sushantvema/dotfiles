@@ -145,3 +145,29 @@ The installation process will warn of files which could be destructively overwri
 Now we should have `nix-darwin` on our system which provides a `darwin-rebuild` command allowing us to run `darwin-rebuild switch --flake .` anytime. 
 
 Note that this is similar to `nixos-rebuild` command in NixOS. 
+
+## nix-darwin Configuration Goodies
+Now, we can explore the treasures of the [nix-darwin configuration options documentation](https://nix-darwin.github.io/nix-darwin/manual/index.html). here are some examples. I won't add the code snippets here, they are largely in the article I linked above as well as can be referenced in the configuration docs. 
+
+- Unlock `sudo` with Touch ID
+- Setting System Defaults
+  - pretty much anything that you can configure using the macOS UI or the `defaults` command in the terminal can be managed by nix-darwin
+- Optionally can enable support for Intel binaries in Apple Silicon Macs via configuring Rosetta as well as changing `nix.extraOptions`. Now you can build and run binaries for both CPUs... not much of a usecase for me tho most likely
+- There's also something called a "linux builder" which I won't explore for now
+
+Now - there is only a two step process to updating your system. 
+1. Update the nix flake inputs
+2. Rebuild the system
+
+```bash
+nix flake update
+darwin-rebuild switch --flake .
+```
+
+Note that if the configuration resides in a git repository, `nix flake update --commit-lock-file` can automatically commit the lockfile changes! Cool.
+
+Now, when you have your configuration in github, a new bootstrap from scratch looks as simple as 
+1. Install nix with the recommended installer
+2. Run `nix run nix-darwin --switch --flake github:my-user/my-repo#my-config`
+
+
