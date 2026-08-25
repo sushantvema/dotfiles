@@ -3,3 +3,7 @@ lazy-lock.json
 .aider*
 .aider.conf.yml
 .claude/.secrets
+
+# Vim swap files - I need to figure out how to do this globally
+*.swo
+*.swp
