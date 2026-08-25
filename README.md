@@ -138,7 +138,7 @@ There are a lot of sections here, but don't be overwhelmed. I'm going to change 
 2. `simple` in the bottom of the file under `darwinConfigurations."simple"` will be renamed to my host machine (tbd). This allows us to not have to provide the host name explicitly every time we build or rebuild the system configuration. 
 
 Now we can boostrap as follows:
-`nix run nix-darwin --switch --flake .` from the directory of the flake. 
+`nix run nix-darwin -- switch --flake .` from the directory of the flake. 
 
 Note that if we didn't rename the host name attribute, the last parameter needs to be `--flake .#simple`
 
