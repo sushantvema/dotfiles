@@ -57,3 +57,91 @@ nix run nixpkgs#hello
 ```
 
 Note that there is a Nix (and NixOS) [cheatsheet](https://nixcademy.com/cheatsheet/) which can be used as a reference for common commands. 
+
+### Nix Darwin
+Now with Nix installed, we have all of the nix shell commands (`nix develop` and `nix shell`) and can now build and run (`nix build` and `nix run`) projects. 
+
+However, we don't want to run `nix profile install ...` on every mac host - this would not be better than classical papackage management solutions. Also we won't be able to manage configurations and services on macOS using `nix profile install`. 
+
+Instead we want one big configuration file(s) which we can deploy with one single command. `nix-darwin` brings us a declaritive system approach to macOS. 
+
+In order to bootstrap, we can initialize a new `nix-darwin` configuration file. 
+
+```bash
+mkdir nix-darwin-config
+cd nix-darwin-config
+nix flake init -t nix-darwin
+```
+
+Note: the `-t` flag means a template.
+
+This will simply create a `flake.nix` file as so:
+
+```nix
+{
+  description = "Example Darwin system flake";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nix-darwin.url = "github:LnL7/nix-darwin";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+  };
+
+  outputs = inputs@{ self, nix-darwin, nixpkgs }:
+  let
+    configuration = { pkgs, ... }: {
+      # List packages installed in system profile. To search by name, run:
+      # $ nix-env -qaP | grep wget
+      environment.systemPackages =
+        [ pkgs.vim
+        ];
+
+      # Auto upgrade nix package
+      # nix.package = pkgs.nix;
+
+      # Necessary for using flakes on this system.
+      nix.settings.experimental-features = "nix-command flakes";
+
+      # Create /etc/zshrc that loads the nix-darwin environment.
+      programs.zsh.enable = true;  # default shell on catalina
+      # programs.fish.enable = true;
+
+      # Set Git commit hash for darwin-version.
+      system.configurationRevision = self.rev or self.dirtyRev or null;
+
+      # Used for backwards compatibility, please read the changelog before changing.
+      # $ darwin-rebuild changelog
+      system.stateVersion = 4;
+
+      # The platform the configuration will be used on.
+      nixpkgs.hostPlatform = "x86_64-darwin";
+    };
+  in
+  {
+    # Build darwin flake using:
+    # $ darwin-rebuild build --flake .#simple
+    darwinConfigurations."simple" = nix-darwin.lib.darwinSystem {
+      modules = [ configuration ];
+    };
+
+    # Expose the package set, including overlays, for convenience.
+    darwinPackages = self.darwinConfigurations."simple".pkgs;
+  }; 
+}
+```
+
+There are a lot of sections here, but don't be overwhelmed. I'm going to change 2 things:
+
+1. `nixpgs.hostPlatform` will be `aarch64-darwin` since I'm running Apple Silicon. 
+2. `simple` in the bottom of the file under `darwinConfigurations."simple"` will be renamed to my host machine (tbd). This allows us to not have to provide the host name explicitly every time we build or rebuild the system configuration. 
+
+Now we can boostrap as follows:
+`nix run nix-darwin --switch --flake .` from the directory of the flake. 
+
+Note that if we didn't rename the host name attribute, the last parameter needs to be `--flake .#simple`
+
+The installation process will warn of files which could be destructively overwritten. If necessary you can back them up or just delete them yourself. Once you're ready you can run the script again. 
+
+Now we should have `nix-darwin` on our system which provides a `darwin-rebuild` command allowing us to run `darwin-rebuild switch --flake .` anytime. 
+
+Note that this is similar to `nixos-rebuild` command in NixOS. 
