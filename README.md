@@ -146,6 +146,8 @@ The installation process will warn of files which could be destructively overwri
 
 Now we should have `nix-darwin` on our system which provides a `darwin-rebuild` command allowing us to run `darwin-rebuild switch --flake .` anytime. 
 
+Note: For some reason, I had to run the bootstrap command using sudo.
+
 Note that this is similar to `nixos-rebuild` command in NixOS. 
 
 ## nix-darwin Configuration Goodies
