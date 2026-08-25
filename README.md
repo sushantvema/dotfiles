@@ -15,13 +15,14 @@ and more. Maybe in the future will also include home-manager although I hear it'
 - [x] Install GitHub CLI since password-based authentication is deprecated in git. Install with brew
 - [x] Purchase and install TabTap (https://tabtabapp.net) for convenient tab and window switching.
 - [x] Install Homerow (https://www.homerow.app) for keyboard-based UI navigation
-- [ ] Install Nix onto my main Macbook Pro
+- [x] Install Nix onto my main Macbook Pro
 - [ ] Setup nix-darwin as a flake, checked into github
 - [ ] Install neovim eventually as well as my developer dependencies
   - [ ] fzf
   - [ ] zoxide
   - [ ] lazygit
 - [ ] Remap caps lock to control somehow (ideally using nix-darwin config) for better productivity in the terminal
+- [ ] Properly configure clipboard for yank in vim and neovim
 - [ ] Decrease the latency between keystrokes as much as possible using nix-darwin
 - [ ] Install Wezterm, migrate from Alacritty
 
@@ -48,7 +49,8 @@ We're going to use the new-but-stable unofficial installer. Snippet here:
 curl -sSfL https://artifacts.nixos.org/nix-installer | sh -s -- install --enable-flakes
 ```
 
-We are going to choose the multi-user installation option rather than single-user.
+We are going to choose the multi-user installation option rather than single-user. 
+- Note after the fact, that I do not recall seeing an option / user input confirming multi vs single user installation. I have to verify that multi-user was installed. 
 
 After some basic installation ack's as well as a shell restart, we can use `nix run` to ephemerally test whether the installation can run the GNU Hello package from Nixpgs. 
 
