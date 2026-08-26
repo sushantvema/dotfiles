@@ -14,10 +14,13 @@
       # $ nix-env -qaP | grep wget
       environment.systemPackages =
         [ 
+          pkgs.prek
 	  pkgs.vim
           pkgs.zoxide 
           pkgs.lazygit
           pkgs.fzf
+          pkgs.gh
+          pkgs.ollama
         ];
 
       # Necessary for using flakes on this system.
@@ -35,8 +38,18 @@
 
       # The platform the configuration will be used on.
       nixpkgs.hostPlatform = "aarch64-darwin";
+
+      system.primaryUser = "sushant";
       
       security.pam.services.sudo_local.touchIdAuth = true;
+
+      system.defaults = {
+        dock.autohide = true;
+        dock.mru-spaces = false;
+        finder.AppleShowAllExtensions = true;
+        finder.FXPreferredViewStyle = "clmv";
+        screencapture.location = "~/Pictures/screenshots";
+      };
     };
   in
   {
