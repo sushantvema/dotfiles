@@ -7,45 +7,55 @@ My configuration for primarily MacOS machines. Working on getting this setup wit
 - macOS native configuration (typing speed, dock config, ...)
 - packages
 
-and more. Maybe in the future will also include home-manager although I hear it's a pain in the ass. 
+and more. Maybe in the future will also include home-manager although I hear it's a pain in the ass.
+
+The eventual goal is to easily manage my system configuration across a personal
+macbook pro as well as a homelab mac studio running AI inference.
 
 ## TODO List (migrating over from an Apple Note
 
 - [x] Install Homebrew via `brew.sh`
 - [x] Install GitHub CLI since password-based authentication is deprecated in git. Install with brew
-- [x] Purchase and install TabTap (https://tabtabapp.net) for convenient tab and window switching.
-- [x] Install Homerow (https://www.homerow.app) for keyboard-based UI navigation
+- [x] Purchase and install TabTap (<https://tabtabapp.net>) for convenient tab and window switching.
+- [x] Install Homerow (<https://www.homerow.app>) for keyboard-based UI navigation
 - [x] Install Nix onto my main Macbook Pro
 - [x] Setup nix-darwin as a flake, checked into github
 - [ ] Install neovim eventually as well as my developer dependencies
   - [x] fzf
   - [x] zoxide
   - [x] lazygit
-- [ ] Remap caps lock to control somehow (ideally using nix-darwin config) for better productivity in the terminal
+- [x] Remap caps lock to control somehow (ideally using nix-darwin config) for better productivity in the terminal
 - [ ] Properly configure clipboard for yank in vim and neovim
-- [ ] Decrease the latency between keystrokes as much as possible using nix-darwin
+- [x] Decrease the latency between keystrokes as much as possible using nix-darwin
 - [ ] Install Wezterm, migrate from Alacritty
-- [ ] Experiment with GNU stow for managing my config
+- [x] Experiment with GNU stow for managing my config
 - [ ] Figure out how to make darwin-rebuild only keep the declared configuration every time (fresh slate)
 - [ ] Build zshell config
-- [ ] use `nixfmt` as the linter for my nix flakes
+- [ ] use `nixfmt` as the linter for my nix flakes. Actually seems to be an issue here with precommit and this particular hook, so will try something else.
+- [ ] Installed and configured aerospace (tiling window manager based on i3).
+Much nicer to use than yabai. Faster and more responsive as well.
+
+## Objectives for an AI workstation
 
 ## Why Use Nix on a Mac?
+
 - [Nixpkgs](https://search.nixos.org/packages) is allegedly the "biggest and freshest open-source package repository in the world". According to automated analysis by [Repology](https://repology.org/repositories/graphs)
 - Better than homebrew (pseudo-native Mac package manager) by a longshot
-- *Same packages cross platform*. A nix package on macos will be the same as debian, fedora, etc, at the very least in terms of versions. 
-- "per project toolchain management". Apparently `nix develop` allows develops and administrators to easily manage toolchains and potentially avoid docker if they really wanted to. 
-- `nix-darwin`. A nix module that allows declarative config of nearly all macOS system settings. As well as packages/apps, and some of their configuration. Integration with `launchd` (not sure the implications there). 
+- *Same packages cross platform*. A nix package on macos will be the same as debian, fedora, etc, at the very least in terms of versions.
+- "per project toolchain management". Apparently `nix develop` allows develops and administrators to easily manage toolchains and potentially avoid docker if they really wanted to.
+- `nix-darwin`. A nix module that allows declarative config of nearly all macOS system settings. As well as packages/apps, and some of their configuration. Integration with `launchd` (not sure the implications there).
 
 ## Nix Installation
+
 While the simplest way to install nix, say, on a random linux machine is to use another package manager to install it using another package manager, that is not recommended at all.
 
 Note that one primary resource I'm using here is [Setting up Nix on macOS](https://nixcademy.com/posts/nix-on-macos/) from Nixcademy.
 
-There are 3 ways to install nix on macOS which are known to work pretty well. 
+There are 3 ways to install nix on macOS which are known to work pretty well.
+
 1. Official Nix installer from `nixos.org`
-2. New yet-unofficial Nix Installer from `nixos.org` (stable, and seems to be preferred. also allows for Nix Flakes to be enabled which I will get to later). 
-3. Determinate System's Nix Installer. Determinate Nix is a downstream distribution of nix with other features. Deviates from vanilla - we will probably stick with vanilla nix for now. 
+2. New yet-unofficial Nix Installer from `nixos.org` (stable, and seems to be preferred. also allows for Nix Flakes to be enabled which I will get to later).
+3. Determinate System's Nix Installer. Determinate Nix is a downstream distribution of nix with other features. Deviates from vanilla - we will probably stick with vanilla nix for now.
 
 We're going to use the new-but-stable unofficial installer. Snippet here:
 
@@ -53,25 +63,27 @@ We're going to use the new-but-stable unofficial installer. Snippet here:
 curl -sSfL https://artifacts.nixos.org/nix-installer | sh -s -- install --enable-flakes
 ```
 
-We are going to choose the multi-user installation option rather than single-user. 
-- Note after the fact, that I do not recall seeing an option / user input confirming multi vs single user installation. I have to verify that multi-user was installed. 
+We are going to choose the multi-user installation option rather than single-user.
 
-After some basic installation ack's as well as a shell restart, we can use `nix run` to ephemerally test whether the installation can run the GNU Hello package from Nixpgs. 
+- Note after the fact, that I do not recall seeing an option / user input confirming multi vs single user installation. I have to verify that multi-user was installed.
+
+After some basic installation ack's as well as a shell restart, we can use `nix run` to ephemerally test whether the installation can run the GNU Hello package from Nixpgs.
 
 ```bash
 nix run nixpkgs#hello
 ```
 
-Note that there is a Nix (and NixOS) [cheatsheet](https://nixcademy.com/cheatsheet/) which can be used as a reference for common commands. 
+Note that there is a Nix (and NixOS) [cheatsheet](https://nixcademy.com/cheatsheet/) which can be used as a reference for common commands.
 
 ### Nix Darwin
-Now with Nix installed, we have all of the nix shell commands (`nix develop` and `nix shell`) and can now build and run (`nix build` and `nix run`) projects. 
 
-However, we don't want to run `nix profile install ...` on every mac host - this would not be better than classical papackage management solutions. Also we won't be able to manage configurations and services on macOS using `nix profile install`. 
+Now with Nix installed, we have all of the nix shell commands (`nix develop` and `nix shell`) and can now build and run (`nix build` and `nix run`) projects.
 
-Instead we want one big configuration file(s) which we can deploy with one single command. `nix-darwin` brings us a declaritive system approach to macOS. 
+However, we don't want to run `nix profile install ...` on every mac host - this would not be better than classical papackage management solutions. Also we won't be able to manage configurations and services on macOS using `nix profile install`.
 
-In order to bootstrap, we can initialize a new `nix-darwin` configuration file. 
+Instead we want one big configuration file(s) which we can deploy with one single command. `nix-darwin` brings us a declaritive system approach to macOS.
+
+In order to bootstrap, we can initialize a new `nix-darwin` configuration file.
 
 ```bash
 mkdir nix-darwin-config
@@ -138,24 +150,25 @@ This will simply create a `flake.nix` file as so:
 
 There are a lot of sections here, but don't be overwhelmed. I'm going to change 2 things:
 
-1. `nixpgs.hostPlatform` will be `aarch64-darwin` since I'm running Apple Silicon. 
-2. `simple` in the bottom of the file under `darwinConfigurations."simple"` will be renamed to my host machine (tbd). This allows us to not have to provide the host name explicitly every time we build or rebuild the system configuration. 
+1. `nixpgs.hostPlatform` will be `aarch64-darwin` since I'm running Apple Silicon.
+2. `simple` in the bottom of the file under `darwinConfigurations."simple"` will be renamed to my host machine (tbd). This allows us to not have to provide the host name explicitly every time we build or rebuild the system configuration.
 
 Now we can boostrap as follows:
-`nix run nix-darwin -- switch --flake .` from the directory of the flake. 
+`nix run nix-darwin -- switch --flake .` from the directory of the flake.
 
 Note that if we didn't rename the host name attribute, the last parameter needs to be `--flake .#simple`
 
-The installation process will warn of files which could be destructively overwritten. If necessary you can back them up or just delete them yourself. Once you're ready you can run the script again. 
+The installation process will warn of files which could be destructively overwritten. If necessary you can back them up or just delete them yourself. Once you're ready you can run the script again.
 
-Now we should have `nix-darwin` on our system which provides a `darwin-rebuild` command allowing us to run `darwin-rebuild switch --flake .` anytime. 
+Now we should have `nix-darwin` on our system which provides a `darwin-rebuild` command allowing us to run `darwin-rebuild switch --flake .` anytime.
 
 Note: For some reason, I had to run the bootstrap command using sudo.
 
-Note that this is similar to `nixos-rebuild` command in NixOS. 
+Note that this is similar to `nixos-rebuild` command in NixOS.
 
 ## nix-darwin Configuration Goodies
-Now, we can explore the treasures of the [nix-darwin configuration options documentation](https://nix-darwin.github.io/nix-darwin/manual/index.html). here are some examples. I won't add the code snippets here, they are largely in the article I linked above as well as can be referenced in the configuration docs. 
+
+Now, we can explore the treasures of the [nix-darwin configuration options documentation](https://nix-darwin.github.io/nix-darwin/manual/index.html). here are some examples. I won't add the code snippets here, they are largely in the article I linked above as well as can be referenced in the configuration docs.
 
 - Unlock `sudo` with Touch ID
 - Setting System Defaults
@@ -163,7 +176,8 @@ Now, we can explore the treasures of the [nix-darwin configuration options docum
 - Optionally can enable support for Intel binaries in Apple Silicon Macs via configuring Rosetta as well as changing `nix.extraOptions`. Now you can build and run binaries for both CPUs... not much of a usecase for me tho most likely
 - There's also something called a "linux builder" which I won't explore for now
 
-Now - there is only a two step process to updating your system. 
+Now - there is only a two step process to updating your system.
+
 1. Update the nix flake inputs
 2. Rebuild the system
 
@@ -174,8 +188,7 @@ darwin-rebuild switch --flake .
 
 Note that if the configuration resides in a git repository, `nix flake update --commit-lock-file` can automatically commit the lockfile changes! Cool.
 
-Now, when you have your configuration in github, a new bootstrap from scratch looks as simple as 
+Now, when you have your configuration in github, a new bootstrap from scratch looks as simple as
+
 1. Install nix with the recommended installer
 2. Run `nix run nix-darwin --switch --flake github:my-user/my-repo#my-config`
-
-
