@@ -16,15 +16,19 @@ and more. Maybe in the future will also include home-manager although I hear it'
 - [x] Purchase and install TabTap (https://tabtabapp.net) for convenient tab and window switching.
 - [x] Install Homerow (https://www.homerow.app) for keyboard-based UI navigation
 - [x] Install Nix onto my main Macbook Pro
-- [ ] Setup nix-darwin as a flake, checked into github
+- [x] Setup nix-darwin as a flake, checked into github
 - [ ] Install neovim eventually as well as my developer dependencies
-  - [ ] fzf
-  - [ ] zoxide
-  - [ ] lazygit
+  - [x] fzf
+  - [x] zoxide
+  - [x] lazygit
 - [ ] Remap caps lock to control somehow (ideally using nix-darwin config) for better productivity in the terminal
 - [ ] Properly configure clipboard for yank in vim and neovim
 - [ ] Decrease the latency between keystrokes as much as possible using nix-darwin
 - [ ] Install Wezterm, migrate from Alacritty
+- [ ] Experiment with GNU stow for managing my config
+- [ ] Figure out how to make darwin-rebuild only keep the declared configuration every time (fresh slate)
+- [ ] Build zshell config
+- [ ] use `nixfmt` as the linter for my nix flakes
 
 ## Why Use Nix on a Mac?
 - [Nixpkgs](https://search.nixos.org/packages) is allegedly the "biggest and freshest open-source package repository in the world". According to automated analysis by [Repology](https://repology.org/repositories/graphs)
