@@ -20,26 +20,26 @@
       pkgs.go
       pkgs.uv
 	  pkgs.fzf
-          pkgs.prek
+      pkgs.prek
 	  pkgs.stow
 	  pkgs.tmux
+      pkgs.atuin
       pkgs.cmake
       pkgs.nodejs_22
       pkgs.cargo
       pkgs.mactop
-          pkgs.neovim
-          pkgs.zoxide 
-          pkgs.lazygit
-          pkgs.ollama
-          pkgs.docker
-          pkgs.starship
-          pkgs.wezterm
+      pkgs.neovim
+      pkgs.zoxide 
+      pkgs.lazygit
+      pkgs.ollama
+      pkgs.docker
+      pkgs.starship
+      pkgs.wezterm
       pkgs.python312
       pkgs.alacritty
       pkgs.fontconfig
 	  pkgs.vim-darwin
       pkgs.aerospace
-	  
         ];
 
       environment.variables = {
@@ -53,6 +53,7 @@
 
       programs.zsh.interactiveShellInit= ''
       eval "$(zoxide init zsh)"
+      eval "$(atuin init zsh)"
       '';
  
       environment.shellAliases = {
@@ -91,7 +92,7 @@
         screencapture.location = "~/Pictures/screenshots";
       };
 
-      system.defaults.NSGlobalDomain = { InitialKeyRepeat = 10; KeyRepeat = 1; };
+      system.defaults.NSGlobalDomain = { InitialKeyRepeat = 10; KeyRepeat = 1; ApplePressAndHoldEnabled = false;};
 
       system.keyboard.enableKeyMapping = true;
 
