@@ -159,6 +159,8 @@ alt-shift-l = 'move right'
 alt-minus = 'resize smart -50'
 alt-equal = 'resize smart +50'
 
+alt-r = 'mode resize'
+
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
 alt-1 = 'workspace 1'
 alt-2 = 'workspace 2'
@@ -182,7 +184,6 @@ alt-n = 'workspace N'
 alt-o = 'workspace O'
 alt-p = 'workspace P'
 alt-q = 'workspace Q'
-alt-r = 'workspace R'
 alt-s = 'workspace S'
 alt-t = 'workspace T'
 alt-u = 'workspace U'
@@ -252,3 +253,11 @@ alt-shift-h = ['join-with left', 'mode main']
 alt-shift-j = ['join-with down', 'mode main']
 alt-shift-k = ['join-with up', 'mode main']
 alt-shift-l = ['join-with right', 'mode main']
+
+[mode.resize.binding]
+h = 'resize width -50'
+j = 'resize height +50'
+k = 'resize height -50'
+l = 'resize width +50'
+enter = 'mode main'
+esc = 'mode main'
