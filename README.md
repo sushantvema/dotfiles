@@ -156,14 +156,13 @@ Recommended installation is using `uv` with `uv tool install vllm-mlx`
   - [x] zoxide
   - [x] lazygit
 - [x] Remap caps lock to control somehow (ideally using nix-darwin config) for better productivity in the terminal
-- [ ] Properly configure clipboard for yank in vim and neovim
+- [x] Properly configure clipboard for yank in vim and neovim
 - [x] Decrease the latency between keystrokes as much as possible using nix-darwin
-- [ ] Install Wezterm, migrate from Alacritty
 - [x] Experiment with GNU stow for managing my config
 - [ ] Figure out how to make darwin-rebuild only keep the declared configuration every time (fresh slate)
-- [ ] Build zshell config
+- [ ] Build zshell config or prevent the dialogue every time when I open a terminal
 - [ ] use `nixfmt` as the linter for my nix flakes. Actually seems to be an issue here with precommit and this particular hook, so will try something else.
-- [ ] Installed and configured aerospace (tiling window manager based on i3).
+- [x] Installed and configured aerospace (tiling window manager based on i3).
 Much nicer to use than yabai. Faster and more responsive as well.
 
 ## Objectives for an AI workstation
