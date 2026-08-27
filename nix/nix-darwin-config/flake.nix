@@ -18,12 +18,15 @@
 	  pkgs.fd
 	  pkgs.gh
       pkgs.go
+      pkgs.uv
 	  pkgs.fzf
           pkgs.prek
 	  pkgs.stow
 	  pkgs.tmux
+      pkgs.cmake
       pkgs.nodejs_22
       pkgs.cargo
+      pkgs.mactop
           pkgs.neovim
           pkgs.zoxide 
           pkgs.lazygit
@@ -31,7 +34,7 @@
           pkgs.docker
           pkgs.starship
           pkgs.wezterm
-      pkgs.python3
+      pkgs.python312
       pkgs.alacritty
       pkgs.fontconfig
 	  pkgs.vim-darwin
