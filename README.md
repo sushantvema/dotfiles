@@ -12,6 +12,137 @@ and more. Maybe in the future will also include home-manager although I hear it'
 The eventual goal is to easily manage my system configuration across a personal
 macbook pro as well as a homelab mac studio running AI inference.
 
+## Homelab Architecture Ideas
+
+- Runtime options: `llama.cpp`, `MLX`, `mlx-lm`, `vmlx-swift-lm`, antirez's `ds4`
+- Server: `ollama serve`, `llama-server`, `mlx_lm.server`, `Osaurus`,
+`vllm-mlx`, `Rapid-MLX`, `oMLX`, `ds4-server`
+- Harness: `pi`, `hermes`
+- Frontend: Osaurus chat, `Jan`, `LM Studio`, `MLX Studio`, `Open WebUI`
+
+### Runtimes on Apple Silicon
+
+The *compute backend* is the runtime which runs matmuls (i.e where on the chip
+the work actually happens). The following three options cover local **text**
+inference on M-series chips. Picking a runtime trades off inference speed as
+well as how fast new model architectures are supported.
+
+- PyTorch + MPS (Metal Performance Shaders) is the baseline. ML code reaches
+apple silicon through PyTorch, so new architectures will be supported first like
+this. The speed is okay.
+- llama.cpp has hand-written Metal kerners instead of going through MPS. It is
+the engine used to power Ollama and llama-server. Pretty fast, wide coverage,
+consumes GGUF.
+- MLX is Apple's own array framework. Faster on supported models, less
+mainstream, and sometimes lagging by months on new architectures. Osaurus,
+mlx-lm, and JANG stack all use it.
+
+For image models - CoreML on the Neural Engine has the lowest resource
+footprint.
+
+### Weight formats and quantization
+
+Model weights ship in various storage formats subject to optional quantization.
+The bottleneck on consumer hardware is usually RAM. For example, a 70b param
+model at fp16 full precision is ~140gb and will not fit on a 128 GB mac. There
+are several popular formats:
+
+- `safetensors` - Hugging Face baseline. Full precision. This is what PyTorch +
+MPS loads when the model fits without help
+- GGUF - `llama.cpp` format. Not Apple-specific since it also runs on CUDA and
+CPU. Widest model coverage and finest quants down to even IQ2 / IQ3 `imatrix` quants.
+- `MLX` (mlx-community) - native MLX format, Apple-only. Quantized to fit but
+has added speed on M-series. Coverage will lag.
+- JANG - mixed-precision extension to MLX. Each tensor will have its own
+bit-widths instead of one fixed width for the whole format.
+
+As a rule of thumb I will prefer MLX builds for speed when one is published. If
+not, then GGUF. Worst case is safetensors.
+
+### Mixed-precision MLX
+
+Topic to research for later
+
+### Weights repositories
+
+Nearly everything gets weights from Hugging Face. However, different opensource
+toolchains locally store these weights in different locations so it is easy to
+end up with copies of large blobs. So, I need to sort out configuration ahead of
+time to prevent having to do crazy disk auditing later.
+
+`transformers` and `mlx-lm` share one cache `~/.cache/huggingface/hub`. We can
+name a repo and the weights will land there on first download, with every
+subsequent request being served from the cache.
+
+Other ones are "directory-scanning servers". `Osaurus`, `oMLX`, `LM Studio`,
+`MLX Studio`. Each of these wants to see a folder of model subdirectories. Each
+of these has its own default location. `~/MLXModels`, oMLX's `--model-dir`,
+`~/.lmstudio`, `~/.mlxstudio/models`.
+
+Pick one folder and point each server at it. In the folder, mirrow each model's
+`org/repo` path. Then even for manual downloads we can do
+
+```bash
+hf download $repo --local-dir ~/MLXModels/$repo
+```
+
+for example.
+
+`ollama` is a whole different beast with a bunch of duplication. I will probably
+avoid it.
+
+### Memory management
+
+This part is pretty technical.
+
+First of all, it seems that macOS's "Memory Used" indicator does not measure how
+much RAM is committed to a process in the way I thought before. I'll get into
+the details later, but for now:
+
+- use `mactop` as a lightweight resource monitor
+- MacOS by default sets a limit of 75% of RAM allocation for metal on macs
+larger than 36gb ram. At runtime we can use `sudo sysctl` to increase the
+available allocation
+- This might be manageable through nix darwin sine this configuration doesn't
+persists across sessions
+
+### Serving a model headless
+
+I skipped a section about full-stack desktop apps which essentially bundle all
+of the layers. Instead I would like to serve a model as a *daemon* - a
+long-lived process with an OpenAI-compatible API.
+
+Some of the considerations here involve model lifecycle:
+
+- How many models stay resident at once
+- Who decides which
+- What a switch costs against the established memory ceiling
+
+There are two ways to think abou this:
+
+1. a server holds many models and rations them internally - `vllm-mlx` and `oMLX`
+2. server holds exactly one model, and a router in front starts and stops them -
+   something like `llama-swap`
+
+### Takeaways thus far
+
+Let's start by picking one model - qwen 3.8 27b. Serve with vllm-mlx. . We'll
+setup ~/MLXModels with mlx-community/Qwen3.8-27B-bf16. There is some
+configuration here with `--models-config models.yaml`
+
+vllm-mlx provides:
+
+- [Continuous Batching](https://huggingface.co/blog/continuous_batching) - processing multiple conversations in parallel and swapping them out when they are down. This is its own topic and will need to be studied. Useful for enabling high-load serving.
+- Paged KV cache
+- Prefix Caching
+- SSD-tiered cache
+- Exposes both OpenAI and Anthropic compatible APIs
+- Multimodal support
+- Prometheus metrics
+- Built-in benchmarking
+
+Recommended installation is using `uv` with `uv tool install vllm-mlx`
+
 ## TODO List (migrating over from an Apple Note
 
 - [x] Install Homebrew via `brew.sh`
