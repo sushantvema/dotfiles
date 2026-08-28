@@ -19,6 +19,7 @@
 	  pkgs.gh
       pkgs.go
       pkgs.uv
+      pkgs.git
 	  pkgs.fzf
       pkgs.prek
 	  pkgs.stow
@@ -33,6 +34,7 @@
       pkgs.lazygit
       pkgs.ollama
       pkgs.docker
+      pkgs.ripgrep
       pkgs.starship
       pkgs.wezterm
       pkgs.python312
@@ -45,7 +47,12 @@
       environment.variables = {
           EDITOR = "nvim";
           VISUAL = "nvim"; 
+
       };
+
+      environment.shells = [
+        pkgs.zsh
+      ];
 
       programs.zsh.enable = true;
 
