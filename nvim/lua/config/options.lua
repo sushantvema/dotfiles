@@ -5,7 +5,8 @@
 vim.opt.foldmethod = "manual"
 vim.diagnostic.enable(true)
 vim.opt.spell = false
-vim.opt.shell = "/opt/homebrew/bin/bash"
+vim.opt.shell = "/run/current-system/sw/bin/zsh"
+vim.opt.shellcmdflag = "-l -c"
 vim.opt.wrap = true
 vim.opt.linebreak = true
 
