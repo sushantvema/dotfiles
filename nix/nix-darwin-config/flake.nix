@@ -37,11 +37,16 @@
       pkgs.ripgrep
       pkgs.starship
       pkgs.wezterm
-      pkgs.python312
       pkgs.alacritty
+      pkgs.cursor-cli
+      pkgs.typescript
       pkgs.fontconfig
 	  pkgs.vim-darwin
       pkgs.aerospace
+      (pkgs.python312.withPackages (ps: [
+        ps.tkinter
+        ps.nltk
+      ]))
         ];
 
       environment.variables = {
@@ -86,6 +91,8 @@
 
       # The platform the configuration will be used on.
       nixpkgs.hostPlatform = "aarch64-darwin";
+
+      nixpkgs.config.allowUnfree = true;
 
       system.primaryUser = "sushant";
       
