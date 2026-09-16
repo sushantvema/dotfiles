@@ -24,6 +24,9 @@
       pkgs.prek
 	  pkgs.stow
 	  pkgs.tmux
+      pkgs.just
+      pkgs.pnpm
+      pkgs.tree
       pkgs.atuin
       pkgs.cmake
       pkgs.nodejs_22
@@ -35,6 +38,7 @@
       pkgs.ollama
       pkgs.docker
       pkgs.ripgrep
+      pkgs.gitleaks
       pkgs.starship
       pkgs.wezterm
       pkgs.alacritty
