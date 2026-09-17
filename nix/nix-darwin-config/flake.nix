@@ -36,7 +36,6 @@
       pkgs.zoxide 
       pkgs.lazygit
       pkgs.ollama
-      pkgs.docker
       pkgs.ripgrep
       pkgs.gitleaks
       pkgs.starship
@@ -97,6 +96,11 @@
       nixpkgs.hostPlatform = "aarch64-darwin";
 
       nixpkgs.config.allowUnfree = true;
+
+      homebrew = {
+        enable = true;
+        casks = [ "docker-desktop" ];
+      };
 
       system.primaryUser = "sushant";
       
