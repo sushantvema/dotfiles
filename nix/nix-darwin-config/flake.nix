@@ -46,9 +46,11 @@
       pkgs.fontconfig
 	  pkgs.vim-darwin
       pkgs.aerospace
+      pkgs.awscli2
       (pkgs.python312.withPackages (ps: [
         ps.tkinter
         ps.nltk
+        ps.boto3
       ]))
         ];
 
