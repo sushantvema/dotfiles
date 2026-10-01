@@ -20,3 +20,7 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.opt.tabstop = 4 -- render tabs as 4 spaces wide
 
 vim.g.lazyvim_ts_lsp = "tsgo"
+
+-- Disable indexing/build progress at least for pyright as per
+-- https://github.com/microsoft/pyright/issues/11408
+vim.lsp.handlers["$/progress"] = function() end
