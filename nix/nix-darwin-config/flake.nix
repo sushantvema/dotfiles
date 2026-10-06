@@ -27,6 +27,7 @@
       pkgs.just
       pkgs.pnpm
       pkgs.tree
+      pkgs.mise
       pkgs.atuin
       pkgs.cmake
       pkgs.nodejs_22
