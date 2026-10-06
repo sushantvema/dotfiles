@@ -51,6 +51,7 @@
         ps.tkinter
         ps.nltk
         ps.boto3
+        ps.black
       ]))
         ];
 
@@ -101,6 +102,7 @@
 
       homebrew = {
         enable = true;
+        brews = [ "libomp" ];
         casks = [ "docker-desktop" ];
       };
 
