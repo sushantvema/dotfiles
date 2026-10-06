@@ -65,6 +65,10 @@
         pkgs.zsh
       ];
 
+      environment.extraInit = ''
+        export PATH="$HOME/.local/bin:$PATH"
+      '';
+
       programs.zsh.enable = true;
 
       programs.zsh.promptInit = "eval \"$(starship init zsh)\"";
