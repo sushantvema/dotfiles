@@ -1,5 +1,5 @@
 {
-  description = "Example nix-darwin system flake";
+  description = "Mimic MacBook Pro Configuration";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -111,7 +111,7 @@
         casks = [ "docker-desktop" ];
       };
 
-      system.primaryUser = "sushant";
+      system.primaryUser = "sushant.vema";
       
       security.pam.services.sudo_local.touchIdAuth = true;
 
@@ -138,7 +138,7 @@
   {
     # Build darwin flake using:
     # $ darwin-rebuild build --flake .#simple
-    darwinConfigurations."sushantBook" = nix-darwin.lib.darwinSystem {
+    darwinConfigurations."Sushants-MacBook-Pro" = nix-darwin.lib.darwinSystem {
       modules = [ configuration ];
     };
   };
