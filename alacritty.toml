@@ -13,7 +13,7 @@ style = "Regular"
 [window]
 decorations = "None"
 startup_mode = "Maximized"
-opacity = 0.85
+opacity = 0.95
 option_as_alt = "Both"
 
 [window.padding]
