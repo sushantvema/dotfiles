@@ -108,7 +108,7 @@
       homebrew = {
         enable = true;
         brews = [ "libomp" ];
-        casks = [ "docker-desktop" ];
+        casks = [ "docker-desktop" "gcloud-cli" ];
       };
 
       system.primaryUser = "sushant.vema";
