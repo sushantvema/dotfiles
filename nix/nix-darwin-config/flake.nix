@@ -30,24 +30,26 @@
       pkgs.mise
       pkgs.atuin
       pkgs.cmake
-      pkgs.nodejs_22
       pkgs.cargo
       pkgs.mactop
       pkgs.neovim
       pkgs.zoxide 
       pkgs.lazygit
       pkgs.ollama
+      pkgs.wezterm
       pkgs.ripgrep
       pkgs.gitleaks
       pkgs.starship
-      pkgs.wezterm
+      pkgs.cdrtools
       pkgs.alacritty
+      pkgs.nodejs_22
       pkgs.cursor-cli
       pkgs.typescript
       pkgs.fontconfig
 	  pkgs.vim-darwin
       pkgs.aerospace
       pkgs.awscli2
+      pkgs.google-cloud-sdk
       (pkgs.python312.withPackages (ps: [
         ps.tkinter
         ps.nltk
@@ -108,7 +110,7 @@
       homebrew = {
         enable = true;
         brews = [ "libomp" ];
-        casks = [ "docker-desktop" "gcloud-cli" ];
+        casks = [ "docker-desktop" ];
       };
 
       system.primaryUser = "sushant.vema";
