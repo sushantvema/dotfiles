@@ -1,4 +1,4 @@
-{ pkgs, self, ... }: {
+{ pkgs, self, configName, ... }: {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages =
@@ -73,7 +73,7 @@
 
   environment.shellAliases = {
     lg = "lazygit";
-    rebuild = "sudo darwin-rebuild switch --flake .";
+    rebuild = "sudo darwin-rebuild switch --flake .#${configName}";
     v = "nvim";
     e = "exit";
     c = "clear";

@@ -9,18 +9,17 @@
 
   outputs = inputs@{ self, nix-darwin, nixpkgs }:
   let
-    mkDarwin = hostModule: nix-darwin.lib.darwinSystem {
-      specialArgs = { inherit self; };
-      modules = [ ./modules/common.nix hostModule ];
+    mkDarwin = configName: nix-darwin.lib.darwinSystem {
+      specialArgs = { inherit self configName; };
+      modules = [ ./modules/common.nix ./hosts/${configName}.nix ];
     };
   in
   {
-    # Attribute names must match each machine's `scutil --get LocalHostName`
-    # so `darwin-rebuild switch --flake .` selects the right one.
-    darwinConfigurations = {
-      sushantBook = mkDarwin ./hosts/sushantBook.nix;
-      work = mkDarwin ./hosts/work.nix;
-      studio = mkDarwin ./hosts/studio.nix;
-    };
+    # Each name needs a matching hosts/<name>.nix.
+    darwinConfigurations = nixpkgs.lib.genAttrs [
+      "sushantBook"
+      "work"
+      "studio"
+    ] mkDarwin;
   };
 }
