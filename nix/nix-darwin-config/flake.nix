@@ -60,8 +60,7 @@
 
       environment.variables = {
           EDITOR = "nvim";
-          VISUAL = "nvim"; 
-
+          VISUAL = "nvim";
       };
 
       environment.shells = [
@@ -69,6 +68,8 @@
       ];
 
       environment.extraInit = ''
+        # Expand HOME in the shell; XDG paths must be absolute.
+        export XDG_CONFIG_HOME="$HOME/.config"
         export PATH="$HOME/.local/bin:$PATH"
       '';
 
