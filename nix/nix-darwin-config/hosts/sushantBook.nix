@@ -1,0 +1,3 @@
+{ pkgs, ... }: {
+  system.primaryUser = "sushant";
+}
