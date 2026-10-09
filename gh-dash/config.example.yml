@@ -1,0 +1,83 @@
+# Copy this file to config.yml in this directory and customize it locally.
+# config.yml is gitignored: keep private org/repo names and paths there.
+# Load it with: gh dash --config gh-dash/config.yml (from the repo root),
+# or copy it to "$HOME/.config/gh-dash/config.yml" for automatic discovery.
+# XDG_CONFIG_HOME must be absolute; a quoted "~/.config" is not expanded.
+# Replace example-org, example-sandbox and example-repo before using scoped tabs.
+
+prSections:
+  - title: Review requested
+    filters: >-
+      is:open
+      review-requested:@me
+      archived:false
+
+  - title: My PRs
+    filters: is:open author:@me
+
+  - title: Firehose (not me)
+    filters: >-
+      is:open
+      org:example-org org:example-sandbox
+      -involves:@me
+      draft:false
+      archived:false
+      -author:app/dependabot
+      -author:app/renovate
+      sort:updated-desc
+    limit: 10
+
+  - title: Selected repository
+    filters: >-
+      is:open
+      repo:example-org/example-repo
+      archived:false
+      sort:updated-desc
+
+  - title: Organization
+    filters: >-
+      is:open
+      org:example-org
+      archived:false
+      sort:updated-desc
+
+  - title: Recently merged
+    filters: >-
+      is:merged
+      org:example-org org:example-sandbox
+      sort:updated-desc
+
+issuesSections:
+  - title: Assigned to me
+    filters: is:open assignee:@me
+  - title: Mentions
+    filters: is:open mentions:@me
+
+defaults:
+  view: prs
+  prsLimit: 10
+  issuesLimit: 20
+  refetchIntervalMinutes: 5
+  preview:
+    open: true
+    width: 70
+  dateFormat: relative
+  layout:
+    prs:
+      repo:
+        width: 24
+      author:
+        width: 16
+      updatedAt:
+        width: 8
+
+# Keep cross-repository sections intact when launched inside a checkout.
+smartFilteringAtLaunch: false
+
+# Optional: map repositories to local checkouts for checkout actions.
+# repoPaths:
+#   example-org/*: ~/code/example-org/*
+
+# Optional: use delta for diffs if installed.
+# pager:
+#   diff: delta

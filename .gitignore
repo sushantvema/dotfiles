@@ -7,3 +7,6 @@ lazy-lock.json
 # Vim swap files - I need to figure out how to do this globally
 *.swo
 *.swp
+
+# Machine-specific gh-dash queries may include private organizations and repos.
+/gh-dash/config.yml

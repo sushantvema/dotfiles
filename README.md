@@ -143,6 +143,19 @@ vllm-mlx provides:
 
 Recommended installation is using `uv` with `uv tool install vllm-mlx`
 
+## gh-dash
+
+From the repository root, create a local configuration without overwriting an existing one:
+
+```sh
+cp -n gh-dash/config.example.yml gh-dash/config.yml
+gh dash --config gh-dash/config.yml
+```
+
+Replace the example organization and repository placeholders in your local config.
+`gh-dash/config.yml` is gitignored; keep private queries and checkout paths there.
+Only the generalized `gh-dash/config.example.yml` should be committed.
+
 ## TODO List (migrating over from an Apple Note
 
 - [x] Install Homebrew via `brew.sh`
