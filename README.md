@@ -143,6 +143,12 @@ vllm-mlx provides:
 
 Recommended installation is using `uv` with `uv tool install vllm-mlx`
 
+## Agent skills
+
+Repository-local skills live in `.agents/skills/`. The `commit` skill at
+`.agents/skills/commit/SKILL.md` defines the Conventional Commits workflow,
+including scoped staging, privacy review, and verification before committing.
+
 ## gh-dash
 
 From the repository root, create a local configuration without overwriting an existing one:
