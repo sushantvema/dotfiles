@@ -39,6 +39,7 @@
       pkgs.aerospace
       pkgs.awscli2
       pkgs.google-cloud-sdk
+      pkgs.beam27Packages.elixir
       (pkgs.python3.withPackages (ps: [
         ps.tkinter
         ps.nltk
@@ -97,7 +98,7 @@
   homebrew = {
     enable = true;
     brews = [ "libomp" ];
-    casks = [ "docker-desktop" ];
+    casks = [ "docker-desktop" "dbeaver-community"];
   };
 
   security.pam.services.sudo_local.touchIdAuth = true;
