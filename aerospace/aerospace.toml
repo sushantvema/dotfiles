@@ -168,9 +168,11 @@ alt-3 = 'workspace 3'
 alt-4 = 'workspace 4'
 alt-5 = 'workspace 5'
 alt-b = 'workspace B' # browser
+alt-c = 'workspace C' # Apple Calendar
 alt-d = 'workspace D' # docker
 alt-p = 'workspace P' # parallels desktop
 alt-s = 'workspace S' # Slack Desktop
+alt-t = 'workspace T' # TODOS (Apple Reminders)
 
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
@@ -180,9 +182,11 @@ alt-shift-3 = 'move-node-to-workspace 3'
 alt-shift-4 = 'move-node-to-workspace 4'
 alt-shift-5 = 'move-node-to-workspace 5'
 alt-shift-b = 'move-node-to-workspace B'
+alt-shift-c = 'move-node-to-workspace C'
 alt-shift-d = 'move-node-to-workspace D'
 alt-shift-p = 'move-node-to-workspace P'
 alt-shift-s = 'move-node-to-workspace S'
+alt-shift-t = 'move-node-to-workspace T'
 
 alt-shift-f = 'fullscreen'
 
