@@ -46,6 +46,7 @@ in {
       pkgs.aerospace
       pkgs.awscli2
       gcloud
+      pkgs.ookla-speedtest
       pkgs.beam27Packages.elixir
       (pkgs.python3.withPackages (ps: [
         ps.tkinter
