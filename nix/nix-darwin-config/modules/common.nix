@@ -24,9 +24,13 @@ in {
       pkgs.pnpm
       pkgs.tree
       pkgs.mise
+      pkgs.pi-coding-agent
       pkgs.atuin
       pkgs.cmake
       pkgs.cargo
+      pkgs.rustc
+      pkgs.rustfmt
+      pkgs.clippy
       pkgs.mactop
       pkgs.neovim
       pkgs.zoxide
